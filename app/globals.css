@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #000000;
+  color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Selezione testo on-brand */
+::selection {
+  background: #a100ff;
+  color: #ffffff;
+}
+
+/* Scrollbar discreta */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0014;
+}
+::-webkit-scrollbar-thumb {
+  background: #460073;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7500c0;
+}
+
+/* Sfondo a griglia tech */
+.tech-grid {
+  background-image:
+    linear-gradient(rgba(161, 0, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(161, 0, 255, 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 80%);
+}
+
+/* Glow radiali atmosferici */
+.aurora {
+  background:
+    radial-gradient(40% 50% at 20% 20%, rgba(161, 0, 255, 0.28), transparent 60%),
+    radial-gradient(45% 55% at 85% 25%, rgba(255, 80, 160, 0.18), transparent 60%),
+    radial-gradient(50% 60% at 50% 100%, rgba(117, 0, 192, 0.30), transparent 60%);
+  filter: blur(10px);
+}
+
+/* Testo con gradiente Accenture */
+.text-gradient {
+  background: linear-gradient(100deg, #ffffff 0%, #be82ff 45%, #a100ff 75%, #ff50a0 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-anim {
+  background: linear-gradient(100deg, #ffffff, #be82ff, #a100ff, #ff50a0, #ffffff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Bordo con gradiente */
+.border-gradient {
+  position: relative;
+  background: linear-gradient(#0a0014, #0a0014) padding-box,
+    linear-gradient(135deg, #a100ff, #ff50a0, #7500c0) border-box;
+  border: 1px solid transparent;
+}
+
+/* Vignette per proiezione */
+.vignette::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
+  z-index: 50;
+}
+
+/* Logo mark Accenture (chevron) */
+.acn-mark {
+  color: #a100ff;
+  font-weight: 700;
+  display: inline-block;
+}
