@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function IntroScreen({ onStart }: { onStart: () => void }) {
   return (
@@ -52,16 +53,24 @@ export default function IntroScreen({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.6, duration: 0.7 }}
         className="mt-12"
       >
-        <button
-          onClick={onStart}
-          className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-accenture-purple px-10 py-4 text-base font-semibold text-white shadow-glow transition-transform duration-300 hover:scale-[1.03] active:scale-95"
-        >
-          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-          Inizia l{"’"}estrazione
-          <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">
-            {"→"}
-          </span>
-        </button>
+        <div className="flex flex-col items-center gap-4 sm:flex-row">
+          <button
+            onClick={onStart}
+            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-accenture-purple px-10 py-4 text-base font-semibold text-white shadow-glow transition-transform duration-300 hover:scale-[1.03] active:scale-95"
+          >
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+            Inizia l{"’"}estrazione
+            <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">
+              {"→"}
+            </span>
+          </button>
+          <Link
+            href="/brief"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-base font-medium text-white/80 backdrop-blur transition hover:border-accenture-purple/60 hover:text-white"
+          >
+            Brief & regolamento
+          </Link>
+        </div>
       </motion.div>
 
       <motion.div
