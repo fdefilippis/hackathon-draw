@@ -1,12 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SLIDES, type Slide } from "@/lib/training";
 
 export default function TrainingDeck() {
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState(1);
+  const [isFs, setIsFs] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const total = SLIDES.length;
 
   const go = useCallback(
@@ -23,8 +25,29 @@ export default function TrainingDeck() {
   const prev = useCallback(() => go(index - 1), [go, index]);
   const next = useCallback(() => go(index + 1), [go, index]);
 
+  const toggleFs = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else {
+      el.requestFullscreen().catch(() => {});
+    }
+  }, []);
+
+  useEffect(() => {
+    const onChange = () => setIsFs(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.key === "f" || e.key === "F") {
+        e.preventDefault();
+        toggleFs();
+        return;
+      }
       if (["ArrowRight", "PageDown", " "].includes(e.key)) {
         e.preventDefault();
         next();
@@ -41,13 +64,18 @@ export default function TrainingDeck() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev, go, total]);
+  }, [next, prev, go, total, toggleFs]);
 
   const slide = SLIDES[index];
 
   return (
-    <div className="flex w-full flex-col">
-      {/* Barra di avanzamento + contatore */}
+    <div
+      ref={containerRef}
+      className={`flex w-full flex-col ${
+        isFs ? "h-screen justify-center bg-black p-6 sm:p-10" : ""
+      }`}
+    >
+      {/* Barra di avanzamento + contatore + fullscreen */}
       <div className="mb-4 flex items-center gap-4">
         <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/5">
           <motion.div
@@ -61,10 +89,22 @@ export default function TrainingDeck() {
           {" / "}
           {String(total).padStart(2, "0")}
         </span>
+        <button
+          onClick={toggleFs}
+          aria-label={isFs ? "Esci da schermo intero" : "Schermo intero"}
+          title={isFs ? "Esci da schermo intero (F)" : "Schermo intero (F)"}
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 text-white/60 transition hover:border-white/30 hover:text-white"
+        >
+          {isFs ? <CompressIcon /> : <ExpandIcon />}
+        </button>
       </div>
 
       {/* Palco slide */}
-      <div className="relative flex min-h-[60vh] w-full items-stretch overflow-hidden rounded-2xl border border-white/10 bg-accenture-ink/50 backdrop-blur sm:min-h-[62vh]">
+      <div
+        className={`relative flex w-full items-stretch overflow-hidden rounded-2xl border border-white/10 bg-accenture-ink/50 backdrop-blur ${
+          isFs ? "min-h-0 flex-1" : "min-h-[60vh] sm:min-h-[62vh]"
+        }`}
+      >
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={slide.id}
@@ -115,9 +155,25 @@ export default function TrainingDeck() {
       </div>
 
       <p className="mt-4 text-center text-xs text-white/30">
-        Usa le frecce ← → (o la barra spaziatrice) per navigare le slide.
+        Frecce ← → o barra spaziatrice per navigare · tasto F per lo schermo intero.
       </p>
     </div>
+  );
+}
+
+function ExpandIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3" />
+    </svg>
+  );
+}
+
+function CompressIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 8h3a2 2 0 0 0 2-2V3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M21 16h-3a2 2 0 0 0-2 2v3" />
+    </svg>
   );
 }
 
