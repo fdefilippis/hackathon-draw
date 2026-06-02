@@ -34,6 +34,16 @@ pensato per essere **proiettato su schermo** davanti ai partecipanti.
 | 5 | **Risultati** | Tutte le squadre in griglia, leggibili e presentabili: *"Team completati. Che la sfida abbia inizio."* |
 | 6 | **Rigenera / Ricomincia** | Nuova estrazione con gli stessi nomi, oppure ripartenza da zero. |
 
+## 🧭 Sezioni dell'app
+
+Oltre alla cerimonia di estrazione (home `/`), l'app include due sezioni di supporto all'evento, raggiungibili dalla schermata iniziale e via URL diretto (utile per i partecipanti sui propri dispositivi):
+
+| Route | Sezione | Contenuto |
+|-------|---------|-----------|
+| `/` | **Estrazione** | La cerimonia di sorteggio delle coppie. |
+| `/brief` | **Brief & Regolamento** | Brief completo dell'Hackathon Agentic Coding: obiettivi, regole, deliverable, i 3 temi (navigabili a tab) e criteri di valutazione. |
+| `/training` | **Training Claude Code** | Slide deck interattivo di livello intermedio sull'uso corretto di Claude Code (navigazione da tastiera con le frecce). |
+
 ## 🚀 Avvio rapido
 
 Requisiti: **Node.js 18.18+** (testato su Node 25).
