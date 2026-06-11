@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import confetti from "canvas-confetti";
 import type { Pair } from "@/lib/pairing";
+import ConfirmModal from "@/components/ConfirmModal";
 
 export default function ResultsScreen({
   pairs,
@@ -12,8 +14,21 @@ export default function ResultsScreen({
 }: {
   pairs: Pair[];
   onRegenerate: () => void;
-  onRestart: () => void;
+  onRestart: () => void | Promise<void>;
 }) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [clearing, setClearing] = useState(false);
+
+  const handleConfirmRestart = async () => {
+    setClearing(true);
+    try {
+      await onRestart();
+    } finally {
+      setClearing(false);
+      setConfirmOpen(false);
+    }
+  };
+
   useEffect(() => {
     const colors = ["#A100FF", "#BE82FF", "#FF50A0", "#7500C0", "#FFFFFF"];
     const end = Date.now() + 1200;
@@ -109,13 +124,31 @@ export default function ResultsScreen({
           <span className="text-base">{"↻"}</span>
           Rigenera estrazione
         </button>
+        <Link
+          href="/admin"
+          className="inline-flex items-center gap-2 rounded-full border border-accenture-purple/40 px-7 py-3 text-sm font-medium text-accenture-purpleLight transition hover:border-accenture-purple/70 hover:text-white"
+        >
+          Pannello giuria
+          <span className="text-base">{"→"}</span>
+        </Link>
         <button
-          onClick={onRestart}
+          onClick={() => setConfirmOpen(true)}
           className="rounded-full border border-white/15 px-7 py-3 text-sm font-medium text-white/70 transition hover:border-white/30 hover:text-white"
         >
           Ricomincia da capo
         </button>
       </motion.div>
+
+      <ConfirmModal
+        open={confirmOpen}
+        busy={clearing}
+        title="Ricominciare da capo?"
+        message="Verranno cancellati definitivamente la lista dei partecipanti e le coppie salvate nel database. L'operazione non è reversibile."
+        confirmLabel="Sì, svuota tutto"
+        cancelLabel="Annulla"
+        onConfirm={handleConfirmRestart}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </motion.section>
   );
 }

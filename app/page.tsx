@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Background from "@/components/Background";
 import BrandHeader from "@/components/BrandHeader";
 import IntroScreen from "@/components/IntroScreen";
@@ -12,23 +12,69 @@ import { makePairs, type Pair } from "@/lib/pairing";
 
 type Step = "intro" | "input" | "drawing" | "results";
 
+/** Salva l'estrazione corrente nel DB. Degradazione morbida: l'app prosegue anche se fallisce. */
+async function persist(names: string[], pairs: Pair[]): Promise<void> {
+  try {
+    await fetch("/api/state", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ names, pairs }),
+    });
+  } catch (err) {
+    console.error("Salvataggio stato fallito", err);
+  }
+}
+
 export default function Home() {
   const [step, setStep] = useState<Step>("intro");
   const [names, setNames] = useState<string[]>([]);
   const [pairs, setPairs] = useState<Pair[]>([]);
 
+  // Ripristino dell'ultima estrazione salvata al caricamento.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/state");
+        if (!res.ok) return;
+        const { state } = (await res.json()) as {
+          state: { names: string[]; pairs: Pair[] } | null;
+        };
+        if (!cancelled && state && state.pairs.length > 0) {
+          setNames(state.names);
+          setPairs(state.pairs);
+          setStep("results");
+        }
+      } catch (err) {
+        console.error("Ripristino stato fallito", err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const startDraw = useCallback((list: string[]) => {
+    const nextPairs = makePairs(list);
     setNames(list);
-    setPairs(makePairs(list));
+    setPairs(nextPairs);
     setStep("drawing");
+    void persist(list, nextPairs);
   }, []);
 
   const regenerate = useCallback(() => {
-    setPairs(makePairs(names));
+    const nextPairs = makePairs(names);
+    setPairs(nextPairs);
     setStep("drawing");
+    void persist(names, nextPairs);
   }, [names]);
 
-  const restart = useCallback(() => {
+  const restart = useCallback(async () => {
+    try {
+      await fetch("/api/state", { method: "DELETE" });
+    } catch (err) {
+      console.error("Pulizia DB fallita", err);
+    }
     setNames([]);
     setPairs([]);
     setStep("intro");
