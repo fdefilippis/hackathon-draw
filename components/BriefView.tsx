@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import {
+  AGENDA,
   AGENTIC_CAPABILITIES,
   CRITERIA,
   DEMONSTRATE,
@@ -10,6 +11,8 @@ import {
   FINAL_MESSAGE,
   GENERAL_RULES,
   NOT_ALLOWED,
+  REPO_STRUCTURE,
+  SUBMISSION_RULES,
   THEMES,
 } from "@/lib/brief";
 
@@ -17,6 +20,7 @@ const NAV = [
   { id: "panoramica", label: "Panoramica" },
   { id: "regole", label: "Regole" },
   { id: "deliverable", label: "Risultato atteso" },
+  { id: "consegna", label: "Consegna" },
   { id: "temi", label: "I 3 temi" },
   { id: "valutazione", label: "Valutazione" },
 ];
@@ -83,10 +87,10 @@ export default function BriefView() {
           Hackathon <span className="text-gradient">Agentic Coding</span>
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-balance text-base text-white/65 sm:text-lg">
-          8 ore, team da 2 persone, una soluzione funzionante che usa l'agentic
-          coding per un problema concreto di inclusione digitale. Scegliete un
-          tema, definite un problema specifico, costruite un prototipo e
-          preparate la demo finale.
+          5 ore di sviluppo, team da 2 persone, una soluzione funzionante che
+          usa l'agentic coding per un problema concreto di inclusione digitale.
+          Scegliete un tema, definite un problema specifico, costruite un
+          prototipo e preparate la demo finale.
         </p>
       </motion.section>
 
@@ -135,6 +139,38 @@ export default function BriefView() {
         <SectionTitle eyebrow="Come si gioca" title="Regole generali" />
         <Bullets items={GENERAL_RULES} />
 
+        <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-5">
+          <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+            Scaletta della giornata
+          </h3>
+          <div className="space-y-2.5">
+            {AGENDA.map((item, i) => (
+              <div
+                key={i}
+                className={`flex items-center gap-4 ${
+                  "freeze" in item && item.freeze
+                    ? "border-t border-accenture-purple/30 pt-3"
+                    : ""
+                }`}
+              >
+                <span className="w-12 shrink-0 font-mono text-sm font-semibold text-accenture-purpleLight">
+                  {item.time}
+                </span>
+                <span
+                  className={`flex-1 text-sm leading-snug ${"freeze" in item && item.freeze ? "font-semibold text-accenture-purpleLight" : "text-white/70"}`}
+                >
+                  {item.label}
+                </span>
+                {"note" in item && item.note && (
+                  <span className="shrink-0 text-xs text-white/30">
+                    {item.note}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="mt-8 grid gap-6 md:grid-cols-2">
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
             <h3 className="mb-3 font-display text-lg font-semibold text-white">
@@ -178,6 +214,33 @@ export default function BriefView() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Modalità di consegna */}
+      <section id="consegna" className="mt-16 scroll-mt-24">
+        <SectionTitle eyebrow="Repository finale" title="Modalità di consegna" />
+        <p className="mb-6 text-white/60">
+          Ogni team dovrà consegnare il proprio output tramite un repository pubblico
+          GitHub, completo di progetto, struttura agentica e presentazione finale.
+        </p>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+            <h3 className="mb-3 font-display text-lg font-semibold text-white">
+              Regole di consegna
+            </h3>
+            <Bullets items={SUBMISSION_RULES} />
+          </div>
+          <div className="rounded-xl border border-accenture-purple/20 bg-accenture-purple/5 p-5">
+            <h3 className="mb-3 font-display text-lg font-semibold text-white">
+              Struttura minima del repository
+            </h3>
+            <ul className="space-y-2 font-mono text-sm text-white/70">
+              {REPO_STRUCTURE.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -307,8 +370,9 @@ export default function BriefView() {
       <section id="valutazione" className="mt-16 scroll-mt-24">
         <SectionTitle eyebrow="Come si vince" title="Criteri di valutazione" />
         <p className="mb-6 text-white/60">
-          La giuria valuterà i progetti considerando sia il risultato finale sia
-          il processo seguito dal team.
+          La giuria valuterà ogni progetto su otto criteri pesati, con un punteggio
+          da 1 a 100 per ciascuno. I criteri più pesanti riguardano la profondità
+          agentica e la qualità delle istruzioni — il cuore tecnico della soluzione.
         </p>
         <div className="grid gap-3 sm:grid-cols-2">
           {CRITERIA.map((c, i) => (
@@ -316,13 +380,20 @@ export default function BriefView() {
               key={i}
               className="rounded-xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-accenture-purple/40"
             >
-              <div className="flex items-baseline gap-3">
-                <span className="font-display text-lg font-bold text-accenture-purpleLight tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="font-display text-base font-semibold text-white">
-                  {c.title}
-                </h3>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-baseline gap-3">
+                  <span className="font-display text-lg font-bold text-accenture-purpleLight tabular-nums">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-display text-base font-semibold text-white">
+                    {c.title}
+                  </h3>
+                </div>
+                {"weight" in c && (
+                  <span className="shrink-0 rounded-full border border-accenture-purple/30 bg-accenture-purple/10 px-2.5 py-0.5 font-mono text-xs font-semibold text-accenture-purpleLight">
+                    {c.weight}
+                  </span>
+                )}
               </div>
               <p className="mt-2 pl-9 text-sm leading-relaxed text-white/60">
                 {c.desc}

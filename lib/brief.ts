@@ -21,9 +21,40 @@ export const DEMONSTRATE = [
 
 export const GENERAL_RULES = [
   "I team sono composti da 2 persone.",
-  "Il tempo disponibile per lavorare alla soluzione è di 8 ore.",
-  "Alla fine del tempo di sviluppo è previsto un freeze: dopo il freeze non sarà più possibile modificare il prototipo, ma solo preparare la demo.",
+  "Il tempo di sviluppo è di 5 ore, distribuito in due blocchi separati dalla pausa pranzo.",
+  "Il freeze è alle 15:20: dopo il freeze non sarà più possibile modificare il prototipo, ma solo preparare la demo a partire dal materiale già consegnato.",
   "Ogni team dovrà presentare una soluzione dimostrabile, anche in forma prototipale, ma non puramente teorica.",
+  "La consegna finale dovrà essere effettuata tramite repository pubblico GitHub.",
+];
+
+export const AGENDA = [
+  { time: "09:00", label: "Intro e kick-off", note: "20 min" },
+  { time: "09:20", label: "Sviluppo + preparazione demo" },
+  { time: "13:00", label: "Pausa pranzo", note: "1 ora" },
+  { time: "14:00", label: "Sviluppo + preparazione demo (continua)" },
+  { time: "15:20", label: "Freeze — stop sviluppo", freeze: true },
+  { time: "15:20", label: "Presentazioni e demo finali", note: "30 min" },
+  { time: "15:50", label: "Chiusura", note: "10 min" },
+  { time: "16:00", label: "Aperitivo" },
+];
+
+export const SUBMISSION_RULES = [
+  "La consegna deve avvenire tramite repository pubblico GitHub.",
+  "Il repository deve contenere una cartella project/ con il prototipo sviluppato.",
+  "Dentro project/ deve essere presente una cartella .claude/ con la struttura agentica utilizzata.",
+  "Il repository deve contenere una cartella presentation/ con la presentazione finale in HTML.",
+  "Il file principale della presentazione deve essere presentation/index.html.",
+  "Il repository deve includere un README.md con descrizione, istruzioni di esecuzione, uso dell'AI, validazione e limiti noti.",
+  "Entro il freeze devono essere pushati sia il progetto sia la presentazione HTML.",
+];
+
+export const REPO_STRUCTURE = [
+  "/project/",
+  "/project/.claude/",
+  "/project/README.md",
+  "/presentation/index.html",
+  "/presentation/assets/",
+  "/README.md",
 ];
 
 export const AGENTIC_CAPABILITIES = [
@@ -111,7 +142,7 @@ export const THEMES: Theme[] = [
     focus:
       "Il focus non è creare un'interfaccia “più bella”, ma supportare il processo di sviluppo, test o manutenzione di servizi digitali più accessibili.",
     challenge:
-      "In team da 2 persone, avete 8 ore per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per identificare, correggere o prevenire problemi di accessibilità in un prodotto o servizio digitale.",
+      "In team da 2 persone, avete 5 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per identificare, correggere o prevenire problemi di accessibilità in un prodotto o servizio digitale.",
     examples: [
       "un reviewer automatico per componenti frontend",
       "uno strumento che rileva label mancanti, problemi di contrasto, alt text assenti o navigazione da tastiera non corretta",
@@ -157,7 +188,7 @@ export const THEMES: Theme[] = [
     focus:
       "Il focus non è creare un consulente finanziario AI, ma migliorare l'accesso ai servizi, la comprensione delle informazioni e la chiarezza dei processi.",
     challenge:
-      "In team da 2 persone, avete 8 ore per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per semplificare l'accesso, la comprensione o l'utilizzo di un servizio finanziario digitale.",
+      "In team da 2 persone, avete 5 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per semplificare l'accesso, la comprensione o l'utilizzo di un servizio finanziario digitale.",
     examples: [
       "uno strumento che semplifica il linguaggio di condizioni, costi o commissioni",
       "un checker per form e journey finanziari",
@@ -203,7 +234,7 @@ export const THEMES: Theme[] = [
     focus:
       "Riguarda utenti con bassa alfabetizzazione digitale, difficoltà cognitive o linguistiche, DSA, anziani, lavoratori in riqualificazione o persone che devono imparare a usare strumenti digitali essenziali. Il focus non è creare contenuti formativi generici, ma supportare un percorso di apprendimento inclusivo in uno scenario concreto.",
     challenge:
-      "In team da 2 persone, avete 8 ore per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per rendere più accessibile, comprensibile o personalizzato un percorso di apprendimento digitale per utenti con difficoltà.",
+      "In team da 2 persone, avete 5 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per rendere più accessibile, comprensibile o personalizzato un percorso di apprendimento digitale per utenti con difficoltà.",
     examples: [
       "un generatore di micro-lezioni adattate al livello dell'utente",
       "una guida passo-passo per usare uno strumento digitale reale",
@@ -245,28 +276,44 @@ export const THEMES: Theme[] = [
 
 export const CRITERIA = [
   {
-    title: "Rilevanza del caso d'uso",
-    desc: "Il problema scelto è reale, concreto e significativo?",
+    title: "Profondità agentica",
+    desc: "Il sistema agentico è strutturato? Orchestrazione, sub-agenti, workflow multi-step, skills, stato esternalizzato, output strutturati.",
+    weight: "20%",
   },
   {
-    title: "Qualità dell'approccio agentic",
-    desc: "L'agente AI è stato usato in modo efficace, iterativo e consapevole?",
+    title: "Qualità delle istruzioni",
+    desc: "Le istruzioni sono ben scritte? Scope chiaro, output format definito, step-by-step, vincoli espliciti, coerenza tra file, no sovrapposizioni.",
+    weight: "20%",
+  },
+  {
+    title: "Qualità dell'idea",
+    desc: "Il problema è reale e rilevante? L'approccio agentico è adeguato al problema, non forzato. L'AI aggiunge valore concreto.",
+    weight: "16%",
+  },
+  {
+    title: "Robustezza",
+    desc: "Il sistema è resiliente? Fallback, gestione degli errori, escalation umana intenzionale (HITL), limiti di iterazione.",
+    weight: "13%",
   },
   {
     title: "Qualità tecnica",
-    desc: "Il prototipo funziona? Il codice è comprensibile, strutturato e mantenibile?",
+    desc: "Il codice è solido? Error handling, timeout, retry, configurazione sicura (secrets, env), model tiering.",
+    weight: "10%",
   },
   {
-    title: "Validazione e affidabilità",
-    desc: "Il team ha dimostrato che la soluzione produce un miglioramento reale?",
+    title: "Adeguatezza degli strumenti",
+    desc: "Tools e agenti sono scelti correttamente per il task? Né troppo pochi né ridondanti tra loro.",
+    weight: "9%",
   },
   {
-    title: "Trasparenza e governance",
-    desc: "È chiaro cosa ha fatto l'AI, cosa ha fatto il team e quali limiti sono stati considerati?",
+    title: "Efficienza dei token",
+    desc: "La soluzione è ottimizzata per ridurre il consumo di token?",
+    weight: "6%",
   },
   {
-    title: "Efficacia della demo",
-    desc: "La demo è chiara, credibile e mostra il valore della soluzione?",
+    title: "Documentazione",
+    desc: "Il repository è documentato? README chiaro, flusso agentico spiegato, setup, prerequisiti, tool/MCP/skill documentati.",
+    weight: "6%",
   },
 ];
 
