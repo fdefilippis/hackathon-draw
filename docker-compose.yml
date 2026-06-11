@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    image: hagenthon-draw
+    container_name: hagenthon-draw
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: production
+      PORT: "3002"
+      # Il DB SQLite vive qui, su un volume persistente (vedi sotto).
+      DB_DIR: /app/data
+    volumes:
+      # Volume nominato: i dati sopravvivono a riavvii, rebuild e redeploy del container.
+      - hagenthon-data:/app/data
+
+volumes:
+  hagenthon-data:

@@ -3,7 +3,8 @@ import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Pair } from "@/lib/pairing";
 
-const DB_DIR = join(process.cwd(), "data");
+// Configurabile via env: in produzione punta a un volume persistente (es. /app/data).
+const DB_DIR = process.env.DB_DIR ?? join(process.cwd(), "data");
 const DB_PATH = join(DB_DIR, "hagenthon.db");
 
 // Singleton: sopravvive all'hot-reload di Next in dev (modulo ricaricato spesso).
