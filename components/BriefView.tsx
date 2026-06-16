@@ -235,9 +235,11 @@ export default function BriefView() {
             <h3 className="mb-3 font-display text-lg font-semibold text-white">
               Struttura minima del repository
             </h3>
-            <ul className="space-y-2 font-mono text-sm text-white/70">
+            <ul className="space-y-1 font-mono text-sm text-white/70">
               {REPO_STRUCTURE.map((item, i) => (
-                <li key={i}>{item}</li>
+                <li key={i} className="whitespace-pre">
+                  {item}
+                </li>
               ))}
             </ul>
           </div>

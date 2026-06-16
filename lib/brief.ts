@@ -40,21 +40,20 @@ export const AGENDA = [
 
 export const SUBMISSION_RULES = [
   "La consegna deve avvenire tramite repository pubblico GitHub.",
-  "Il repository deve contenere una cartella project/ con il prototipo sviluppato.",
-  "Dentro project/ deve essere presente una cartella .claude/ con la struttura agentica utilizzata.",
-  "Il repository deve contenere una cartella presentation/ con la presentazione finale in HTML.",
-  "Il file principale della presentazione deve essere presentation/index.html.",
-  "Il repository deve includere un README.md con descrizione, istruzioni di esecuzione, uso dell'AI, validazione e limiti noti.",
-  "Entro il freeze devono essere pushati sia il progetto sia la presentazione HTML.",
+  "Il repository deve essere organizzato in 3 cartelle principali: app/, agents/ e presentation/.",
+  "app/ contiene la soluzione sviluppata (codice del prototipo).",
+  "agents/ contiene la struttura agentica utilizzata: agenti, istruzioni, comandi, prompt, skills e workflow.",
+  "presentation/ contiene la presentazione della soluzione e della struttura agentica.",
+  "La presentazione deve essere realizzata in formato HTML, seguendo le brand guidelines Accenture.",
+  "Entro il freeze devono essere pushati sia il progetto sia la presentazione.",
 ];
 
 export const REPO_STRUCTURE = [
-  "/project/",
-  "/project/.claude/",
-  "/project/README.md",
-  "/presentation/index.html",
-  "/presentation/assets/",
-  "/README.md",
+  "/",
+  "├── app/            soluzione sviluppata",
+  "├── agents/         struttura agentica",
+  "├── presentation/   presentazione HTML (brand Accenture)",
+  "└── README.md",
 ];
 
 export const AGENTIC_CAPABILITIES = [
