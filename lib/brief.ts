@@ -183,22 +183,22 @@ export const THEMES: Theme[] = [
     number: "02",
     title: "Inclusione Finanziaria",
     objective:
-      "Usare strumenti di agentic coding per rendere servizi finanziari digitali più chiari, comprensibili e accessibili, soprattutto per persone con bassa alfabetizzazione finanziaria o difficoltà digitali.",
+      "Usare strumenti di agentic coding per supportare l'educazione alla finanza personale di base, aiutando le persone con bassa alfabetizzazione finanziaria a comprendere concetti e gestire meglio le proprie finanze quotidiane.",
     focus:
-      "Il focus non è creare un consulente finanziario AI, ma migliorare l'accesso ai servizi, la comprensione delle informazioni e la chiarezza dei processi.",
+      "Il focus non è creare un consulente finanziario AI, ma supportare l'educazione alla finanza personale di base: aiutare le persone a comprendere concetti, gestire le proprie finanze quotidiane e prendere decisioni informate.",
     challenge:
-      "In team da 2 persone, avete 5 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per semplificare l'accesso, la comprensione o l'utilizzo di un servizio finanziario digitale.",
+      "In team da 2 persone, avete 5 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per supportare l'educazione alla finanza personale di base, rendendo concetti e gestione del denaro più comprensibili e accessibili.",
     examples: [
-      "uno strumento che semplifica il linguaggio di condizioni, costi o commissioni",
-      "un checker per form e journey finanziari",
-      "un assistant per onboarding a servizi digitali",
-      "uno strumento che spiega termini, costi o vincoli in linguaggio semplice",
-      "un copilot che previene errori utente in processi finanziari",
-      "un validatore della chiarezza di documenti o schermate",
+      "uno strumento che spiega in linguaggio semplice concetti finanziari di base (interesse, tasso, inflazione, rata, TAEG)",
+      "un coach che aiuta a costruire e capire un budget personale o a tenere traccia delle spese",
+      "un simulatore che mostra l'impatto di scelte quotidiane (risparmio, spese ricorrenti, rate) nel tempo",
+      "un assistant che traduce il gergo di estratti conto, bollette o documenti finanziari in concetti chiari",
+      "un percorso di micro-lezioni adattate al livello di alfabetizzazione finanziaria dell'utente",
+      "un quiz interattivo con feedback che rafforza la comprensione di concetti finanziari di base",
     ],
     constraints: [
-      "Selezionare uno scenario preciso: apertura conto, attivazione di un servizio, comprensione di costi o commissioni, compilazione di un form, verifica documentale o lettura di termini e condizioni.",
-      "Dimostrare un miglioramento tangibile di chiarezza, comprensibilità o usabilità.",
+      "Selezionare uno scenario educativo preciso: comprensione di un concetto finanziario di base, gestione del budget personale, lettura di un estratto conto o di una bolletta, comprensione di costi e commissioni o simulazione di una scelta quotidiana di risparmio.",
+      "Dimostrare un miglioramento tangibile nella comprensione o nella capacità dell'utente di gestire le proprie finanze.",
       "Vietato fornire raccomandazioni di investimento, consulenza finanziaria personalizzata o indicazioni su cosa comprare, vendere o scegliere.",
       "Includere una capability software concreta, non solo una riscrittura di testi.",
     ],
