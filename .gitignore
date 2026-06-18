@@ -2,7 +2,6 @@
 /.next
 /out
 /build
-/data
 .DS_Store
 *.pem
 npm-debug.log*
