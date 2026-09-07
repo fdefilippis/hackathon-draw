@@ -16,6 +16,7 @@ import {
   SUBMISSION_RULES,
   THEMES,
 } from "@/lib/brief";
+import { buildThemesHtml } from "@/lib/exportThemes";
 
 const NAV = [
   { id: "panoramica", label: "Panoramica" },
@@ -71,6 +72,20 @@ function Bullets({
 export default function BriefView() {
   const [active, setActive] = useState(THEMES[0].id);
   const theme = THEMES.find((t) => t.id === active) ?? THEMES[0];
+
+  /** Genera e scarica un HTML standalone con i 3 temi, da consegnare ai partecipanti. */
+  function exportThemes() {
+    const html = buildThemesHtml(THEMES);
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "hagenthon-temi-sfida.html";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <div className="mx-auto w-full max-w-4xl pb-24">
@@ -250,7 +265,16 @@ export default function BriefView() {
 
       {/* I 3 temi */}
       <section id="temi" className="mt-16 scroll-mt-24">
-        <SectionTitle eyebrow="Scegline uno" title="I 3 temi" />
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <SectionTitle eyebrow="Scegline uno" title="I 3 temi" />
+          <button
+            onClick={exportThemes}
+            className="mb-7 inline-flex shrink-0 items-center gap-2 rounded-full border border-accenture-purple/40 bg-accenture-purple/10 px-4 py-2 text-sm font-medium text-accenture-purpleLight transition hover:border-accenture-purple/70 hover:bg-accenture-purple/20 hover:text-white"
+          >
+            <span className="text-base leading-none">↓</span>
+            Esporta HTML
+          </button>
+        </div>
 
         {/* Tabs */}
         <div className="mb-8 flex flex-col gap-2 sm:flex-row">

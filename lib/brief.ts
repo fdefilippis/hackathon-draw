@@ -35,7 +35,7 @@ export const AGENDA = [
   { time: "15:20", label: "Freeze — stop sviluppo", freeze: true },
   { time: "15:20", label: "Presentazioni e demo finali", note: "30 min" },
   { time: "15:50", label: "Chiusura", note: "10 min" },
-  { time: "16:00", label: "Aperitivo" },
+  { time: "17:30", label: "Aperitivo" },
 ];
 
 export const SUBMISSION_RULES = [
@@ -277,42 +277,42 @@ export const CRITERIA = [
   {
     title: "Profondità agentica",
     desc: "Il sistema agentico è strutturato? Orchestrazione, sub-agenti, workflow multi-step, skills, stato esternalizzato, output strutturati.",
-    weight: "20%",
+    weight: "24%",
   },
   {
     title: "Qualità delle istruzioni",
     desc: "Le istruzioni sono ben scritte? Scope chiaro, output format definito, step-by-step, vincoli espliciti, coerenza tra file, no sovrapposizioni.",
-    weight: "20%",
-  },
-  {
-    title: "Qualità dell'idea",
-    desc: "Il problema è reale e rilevante? L'approccio agentico è adeguato al problema, non forzato. L'AI aggiunge valore concreto.",
-    weight: "16%",
+    weight: "19%",
   },
   {
     title: "Robustezza",
     desc: "Il sistema è resiliente? Fallback, gestione degli errori, escalation umana intenzionale (HITL), limiti di iterazione.",
-    weight: "13%",
-  },
-  {
-    title: "Qualità tecnica",
-    desc: "Il codice è solido? Error handling, timeout, retry, configurazione sicura (secrets, env), model tiering.",
-    weight: "10%",
-  },
-  {
-    title: "Adeguatezza degli strumenti",
-    desc: "Tools e agenti sono scelti correttamente per il task? Né troppo pochi né ridondanti tra loro.",
-    weight: "9%",
+    weight: "15%",
   },
   {
     title: "Efficienza dei token",
     desc: "La soluzione è ottimizzata per ridurre il consumo di token?",
-    weight: "6%",
+    weight: "12%",
+  },
+  {
+    title: "Qualità tecnica",
+    desc: "Il codice è solido? Error handling, timeout, retry, configurazione sicura (secrets, env), model tiering.",
+    weight: "12%",
+  },
+  {
+    title: "Adeguatezza degli strumenti",
+    desc: "Tools e agenti sono scelti correttamente per il task? Né troppo pochi né ridondanti tra loro.",
+    weight: "11%",
   },
   {
     title: "Documentazione",
     desc: "Il repository è documentato? README chiaro, flusso agentico spiegato, setup, prerequisiti, tool/MCP/skill documentati.",
-    weight: "6%",
+    weight: "7%",
+  },
+  {
+    title: "Qualità dell'idea",
+    desc: "Il problema è reale e rilevante? L'approccio agentico è adeguato al problema, non forzato. L'AI aggiunge valore concreto.",
+    weight: "0%",
   },
 ];
 
