@@ -316,6 +316,19 @@ export const CRITERIA = [
   },
 ];
 
+export type Prize = {
+  rank: number;
+  label: string;
+  amount: string;
+  note: string;
+};
+
+export const PRIZES: Prize[] = [
+  { rank: 1, label: "1° posto", amount: "500 €", note: "per coppia · punti perf." },
+  { rank: 2, label: "2° posto", amount: "300 €", note: "per coppia · punti perf." },
+  { rank: 3, label: "3° posto", amount: "200 €", note: "per coppia · punti perf." },
+];
+
 export const FINAL_MESSAGE = [
   "quale problema affronta",
   "perché è importante",

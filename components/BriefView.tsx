@@ -11,6 +11,7 @@ import {
   FINAL_MESSAGE,
   GENERAL_RULES,
   NOT_ALLOWED,
+  PRIZES,
   REPO_STRUCTURE,
   SUBMISSION_RULES,
   THEMES,
@@ -23,6 +24,7 @@ const NAV = [
   { id: "consegna", label: "Consegna" },
   { id: "temi", label: "I 3 temi" },
   { id: "valutazione", label: "Valutazione" },
+  { id: "premi", label: "Premi" },
 ];
 
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
@@ -402,6 +404,59 @@ export default function BriefView() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Premi & Riconoscimenti */}
+      <section id="premi" className="mt-16 scroll-mt-24">
+        <SectionTitle eyebrow="Cosa si vince" title="Premi & Riconoscimenti" />
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+          <div className="flex items-end justify-center gap-3 sm:gap-6">
+            {PRIZES.map((p) => {
+              const podium =
+                p.rank === 1
+                  ? {
+                      order: "order-2",
+                      height: "h-56 sm:h-64",
+                      bg: "bg-accenture-purple",
+                      amount: "text-3xl sm:text-4xl",
+                    }
+                  : p.rank === 2
+                    ? {
+                        order: "order-1",
+                        height: "h-44 sm:h-52",
+                        bg: "bg-white/25",
+                        amount: "text-2xl sm:text-3xl",
+                      }
+                    : {
+                        order: "order-3",
+                        height: "h-36 sm:h-44",
+                        bg: "bg-amber-500",
+                        amount: "text-2xl sm:text-3xl",
+                      };
+              return (
+                <div
+                  key={p.rank}
+                  className={`flex w-1/3 max-w-[220px] flex-col items-center ${podium.order}`}
+                >
+                  <span className="mb-3 font-display text-lg font-bold text-white/70">
+                    {p.rank}°
+                  </span>
+                  <div
+                    className={`flex w-full flex-col justify-start rounded-t-md p-4 text-white ${podium.height} ${podium.bg}`}
+                  >
+                    <span className={`font-display font-bold ${podium.amount}`}>
+                      {p.amount}
+                    </span>
+                    <span className="mt-2 text-xs leading-snug text-white/85">
+                      {p.note}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-1 h-2 rounded-b-md bg-white/30" />
         </div>
       </section>
 
