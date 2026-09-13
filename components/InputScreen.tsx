@@ -2,23 +2,56 @@
 
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { parseParticipants, validate, TARGET_PARTICIPANTS } from "@/lib/pairing";
+import { parseParticipants, validate } from "@/lib/pairing";
 
-const SAMPLE = Array.from({ length: TARGET_PARTICIPANTS }, (_, i) => {
-  const nomi = [
-    "Giulia Rossi", "Marco Bianchi", "Sara Conti", "Luca Ferrari",
-    "Elena Greco", "Andrea Russo", "Chiara Marino", "Davide Costa",
-    "Martina Ricci", "Francesco Bruno", "Alice Gallo", "Matteo Fontana",
-    "Sofia Esposito", "Lorenzo Caruso", "Aurora De Luca", "Simone Rizzo",
-    "Beatrice Lombardi", "Tommaso Moretti", "Federica Barbieri", "Riccardo Villa",
-    "Valentina Serra", "Alessandro Romano", "Ilaria Galli", "Giovanni Leone",
-    "Camilla Martini", "Stefano Pellegrini", "Noemi Gentile", "Daniele Vitale",
-    "Gaia Palumbo", "Antonio Sala", "Rebecca Negri", "Filippo Sartori",
-    "Greta Donati", "Nicola Mancini", "Eleonora Fabbri", "Pietro Longo",
-    "Vittoria Coppola", "Edoardo Riva", "Alessia Farina", "Cristian Testa",
-  ];
-  return nomi[i];
-}).join("\n");
+/**
+ * Partecipanti convocati per l'edizione del 14/09 (destinatari della convocazione).
+ * Precaricati nella textarea: modificabili prima dell'estrazione.
+ */
+const PARTICIPANTS = [
+  "Emanuele Francescangeli",
+  "Manuel Bonjean",
+  "Salvatore Scarpato",
+  "Alessio De Fulvio",
+  "Enrico De Fabritiis",
+  "Diego Grizi",
+  "Francesca Murgieri",
+  "Stefano Dubla",
+  "Luca Capocci",
+  "Marco Moscariello",
+  "Flavio Amici",
+  "Andrea Di Caro",
+  "Ida Fricon",
+  "Alessio Scoccia",
+  "Alin Ioan Dan",
+  "Michael Carmicino",
+  "Mattia De Bianchi",
+  "Carlotta Soliera",
+  "Diego Mereu",
+  "Luigi Pozzi",
+  "Davide Morelli",
+  "Ludovica Trogu",
+  "Domenico Bernardini",
+  "Agata Palazzo",
+  "Elisa Piermarini",
+  "Alessandro Imperio",
+  "Stefano Alexitch",
+  "Piero Vocale",
+  "Massimo Baffoni",
+  "Luca Vetere",
+  "Patrizio Aiello",
+  "Valentin Iulian Petraru",
+  "Ilaria Scarino",
+  "Cristian Olaru",
+  "Simone Olivieri",
+  "Adrian Borta",
+  "Alessandro Musio",
+  "Giuditta Dominici",
+  "Marco Rinaldi",
+  "Alessandro Schirò",
+];
+
+const PARTICIPANTS_TEXT = PARTICIPANTS.join("\n");
 
 const toneStyles: Record<string, string> = {
   neutral: "text-white/50 border-white/10 bg-white/5",
@@ -34,7 +67,7 @@ export default function InputScreen({
   onDraw: (names: string[]) => void;
   onBack: () => void;
 }) {
-  const [raw, setRaw] = useState("");
+  const [raw, setRaw] = useState(PARTICIPANTS_TEXT);
 
   const names = useMemo(() => parseParticipants(raw), [raw]);
   const v = useMemo(() => validate(names), [names]);
@@ -65,10 +98,10 @@ export default function InputScreen({
             </span>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setRaw(SAMPLE)}
+                onClick={() => setRaw(PARTICIPANTS_TEXT)}
                 className="rounded-md px-3 py-1 text-xs font-medium text-accenture-purpleLight transition hover:bg-white/5"
               >
-                Carica esempio (40)
+                Ricarica lista ({PARTICIPANTS.length})
               </button>
               {raw.length > 0 && (
                 <button
