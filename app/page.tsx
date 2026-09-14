@@ -124,6 +124,8 @@ export default function Home() {
           <span>Hagenthon</span>
           <span className="text-accenture-purple">{">"}</span>
           <span>Accenture Application Engineering</span>
+          <span className="text-accenture-purple">{">"}</span>
+          <a href="/admin" className="hover:text-white/50 transition-colors">Admin</a>
         </footer>
       </main>
     </>
