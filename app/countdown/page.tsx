@@ -104,15 +104,6 @@ export default function CountdownPage() {
             </motion.div>
           ) : (
             <>
-              <motion.p
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="mb-8 text-xs font-semibold uppercase tracking-[0.5em] text-white/45 sm:text-sm"
-              >
-                Si riparte tra
-              </motion.p>
-
               <div className="flex items-start justify-center gap-2 sm:gap-6">
                 <TimeUnit value={time.h} label="ore" />
                 <Separator />
