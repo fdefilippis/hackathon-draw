@@ -20,6 +20,7 @@ const PARTICIPANTS = [
   "Luca Capocci",
   "Marco Moscariello",
   "Flavio Amici",
+  "Andrea Di Caro",
   "Ida Fricon",
   "Alessio Scoccia",
   "Alin Ioan Dan",
