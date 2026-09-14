@@ -38,6 +38,7 @@ const PARTICIPANTS = [
   "Massimo Baffoni",
   "Luca Vetere",
   "Patrizio Aiello",
+  "Ilaria Scarino",
   "Cristian Olaru",
   "Simone Olivieri",
   "Adrian Borta",
