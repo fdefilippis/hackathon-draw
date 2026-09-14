@@ -76,6 +76,12 @@ export default function IntroScreen({ onStart }: { onStart: () => void }) {
           >
             Training Claude Code
           </Link>
+          <Link
+            href="/countdown"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-base font-medium text-white/80 backdrop-blur transition hover:border-accenture-purple/60 hover:text-white"
+          >
+            Countdown
+          </Link>
         </div>
       </motion.div>
 
