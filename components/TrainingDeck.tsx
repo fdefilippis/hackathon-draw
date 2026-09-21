@@ -3,11 +3,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SLIDES, type Slide } from "@/lib/training";
+import { downloadTrainingHtml } from "@/lib/exportTraining";
 
 export default function TrainingDeck() {
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState(1);
   const [isFs, setIsFs] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const total = SLIDES.length;
 
@@ -46,6 +48,11 @@ export default function TrainingDeck() {
       if (e.key === "f" || e.key === "F") {
         e.preventDefault();
         toggleFs();
+        return;
+      }
+      if (e.key === "n" || e.key === "N") {
+        e.preventDefault();
+        setShowNotes((v) => !v);
         return;
       }
       if (["ArrowRight", "PageDown", " "].includes(e.key)) {
@@ -90,6 +97,19 @@ export default function TrainingDeck() {
           {String(total).padStart(2, "0")}
         </span>
         <button
+          onClick={() => setShowNotes((v) => !v)}
+          aria-label={showNotes ? "Nascondi note relatore" : "Mostra note relatore"}
+          aria-pressed={showNotes}
+          title={showNotes ? "Nascondi note relatore (N)" : "Mostra note relatore (N)"}
+          className={`flex h-8 w-8 items-center justify-center rounded-lg border transition ${
+            showNotes
+              ? "border-accenture-purple/60 bg-accenture-purple/15 text-accenture-purpleLight"
+              : "border-white/15 text-white/60 hover:border-white/30 hover:text-white"
+          }`}
+        >
+          <NotesIcon />
+        </button>
+        <button
           onClick={toggleFs}
           aria-label={isFs ? "Esci da schermo intero" : "Schermo intero"}
           title={isFs ? "Esci da schermo intero (F)" : "Schermo intero (F)"}
@@ -97,26 +117,74 @@ export default function TrainingDeck() {
         >
           {isFs ? <CompressIcon /> : <ExpandIcon />}
         </button>
+        <button
+          onClick={downloadTrainingHtml}
+          aria-label="Esporta come HTML"
+          title="Esporta come HTML"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 text-white/60 transition hover:border-white/30 hover:text-white"
+        >
+          <DownloadIcon />
+        </button>
       </div>
 
-      {/* Palco slide */}
+      {/* Palco slide + Note affiancate */}
       <div
-        className={`relative flex w-full items-stretch overflow-hidden rounded-2xl border border-white/10 bg-accenture-ink/50 backdrop-blur ${
+        className={`flex w-full gap-4 ${
           isFs ? "min-h-0 flex-1" : "min-h-[60vh] sm:min-h-[62vh]"
         }`}
       >
-        <AnimatePresence mode="wait" custom={dir}>
-          <motion.div
-            key={slide.id}
-            custom={dir}
-            initial={{ opacity: 0, x: dir * 60 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: dir * -60 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="flex w-full flex-col justify-center p-8 sm:p-12"
-          >
-            <SlideContent slide={slide} />
-          </motion.div>
+        {/* Slide */}
+        <div
+          className={`relative flex items-stretch overflow-hidden rounded-2xl border border-white/10 bg-accenture-ink/50 backdrop-blur transition-all duration-300 ${
+            showNotes ? "w-[55%]" : "w-full"
+          }`}
+        >
+          <AnimatePresence mode="wait" custom={dir}>
+            <motion.div
+              key={slide.id}
+              custom={dir}
+              initial={{ opacity: 0, x: dir * 60 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: dir * -60 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="flex w-full flex-col justify-center p-8 sm:p-12"
+            >
+              <SlideContent slide={slide} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Note relatore affiancate */}
+        <AnimatePresence initial={false}>
+          {showNotes && (
+            <motion.div
+              key="notes"
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: "45%" }}
+              exit={{ opacity: 0, width: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden shrink-0"
+            >
+              <div className="h-full rounded-2xl border border-accenture-purple/25 bg-accenture-purple/[0.06] p-5 sm:p-6 flex flex-col overflow-y-auto">
+                <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-accenture-purpleLight shrink-0">
+                  <NotesIcon />
+                  Note relatore
+                </div>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={slide.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.25 }}
+                    className="text-[15px] leading-relaxed text-white/80 sm:text-base"
+                  >
+                    {slide.notes ?? "— Nessuna nota per questa slide."}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 
@@ -155,7 +223,7 @@ export default function TrainingDeck() {
       </div>
 
       <p className="mt-4 text-center text-xs text-white/30">
-        Frecce ← → o barra spaziatrice per navigare · tasto F per lo schermo intero.
+        Frecce ← → o barra spaziatrice per navigare · tasto F per lo schermo intero · tasto N per le note relatore.
       </p>
     </div>
   );
@@ -173,6 +241,22 @@ function CompressIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 8h3a2 2 0 0 0 2-2V3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M21 16h-3a2 2 0 0 0-2 2v3" />
+    </svg>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+    </svg>
+  );
+}
+
+function NotesIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 5h16M4 10h16M4 15h10M4 20h7" />
     </svg>
   );
 }
@@ -204,7 +288,7 @@ function SlideContent({ slide }: { slide: Slide }) {
           {slide.kicker}
         </span>
         <h2 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-bold leading-[1.02] tracking-tight sm:text-6xl">
-          Usare <span className="text-gradient">Claude Code</span> nel modo giusto
+          <span className="text-gradient">Claude Code</span>, oltre le basi
         </h2>
         {slide.subtitle && (
           <p className="mx-auto mt-5 max-w-xl text-balance text-base text-white/65 sm:text-lg">
