@@ -4,13 +4,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import {
   AGENDA,
-  AGENTIC_CAPABILITIES,
   CRITERIA,
   DEMONSTRATE,
   EXPECTED_RESULTS,
   FINAL_MESSAGE,
   GENERAL_RULES,
-  NOT_ALLOWED,
   PRIZES,
   REPO_STRUCTURE,
   SUBMISSION_RULES,
@@ -185,21 +183,6 @@ export default function BriefView() {
                 )}
               </div>
             ))}
-          </div>
-        </div>
-
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
-            <h3 className="mb-3 font-display text-lg font-semibold text-white">
-              Almeno una capability agentica concreta
-            </h3>
-            <Bullets items={AGENTIC_CAPABILITIES} />
-          </div>
-          <div className="rounded-xl border border-rose-400/20 bg-rose-400/5 p-5">
-            <h3 className="mb-3 font-display text-lg font-semibold text-rose-100">
-              Non sono ammessi progetti che consistono solo in
-            </h3>
-            <Bullets items={NOT_ALLOWED} tone="rose" />
           </div>
         </div>
       </section>

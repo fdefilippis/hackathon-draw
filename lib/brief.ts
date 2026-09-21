@@ -35,7 +35,6 @@ export const AGENDA = [
   { time: "15:20", label: "Freeze — stop sviluppo", freeze: true },
   { time: "15:20", label: "Presentazioni e demo finali", note: "30 min" },
   { time: "15:50", label: "Chiusura", note: "10 min" },
-  { time: "17:30", label: "Aperitivo" },
 ];
 
 export const SUBMISSION_RULES = [
@@ -56,21 +55,6 @@ export const REPO_STRUCTURE = [
   "└── README.md",
 ];
 
-export const AGENTIC_CAPABILITIES = [
-  "analisi automatica di un problema",
-  "proposta di correzioni",
-  "generazione di test",
-  "validazione automatizzata",
-  "adattamento dinamico a un profilo utente",
-  "supporto guidato a un processo",
-];
-
-export const NOT_ALLOWED = [
-  "una semplice presentazione",
-  "un'idea puramente concettuale",
-  "un output generato dall'AI senza revisione umana",
-];
-
 export type ExpectedItem = {
   title: string;
   desc: string;
@@ -83,8 +67,8 @@ export const EXPECTED_RESULTS: ExpectedItem[] = [
     desc: "Un prototipo che mostri chiaramente il problema affrontato e il modo in cui la soluzione lo risolve o lo migliora. Non deve essere un prodotto finito, ma sufficientemente funzionante da dimostrare il valore dell'idea.",
   },
   {
-    title: "Una demo finale",
-    desc: "La demo dovrà mostrare:",
+    title: "Una presentazione della soluzione",
+    desc: "Una presentazione in formato HTML, brandizzata secondo le linee guida Accenture, da esporre in 5 minuti. Dovrà mostrare:",
     bullets: [
       "il problema scelto",
       "l'utente o lo scenario di riferimento",
