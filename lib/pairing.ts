@@ -35,13 +35,31 @@ export function shuffle<T>(input: readonly T[]): T[] {
   return arr;
 }
 
+// Coppie forzate: se entrambi i nomi sono presenti vengono abbinati prima del sorteggio.
+const FIXED_PAIRS: [string, string][] = [
+  ["Armando Cammarata", "Fabio Casiero"],
+];
+
 /** Genera coppie casuali dai partecipanti. Richiede numero pari. */
 export function makePairs(participants: readonly string[]): Pair[] {
-  const shuffled = shuffle(participants);
-  const pairs: Pair[] = [];
+  let pool = [...participants];
+  const fixedMembers: [string, string][] = [];
+
+  for (const [a, b] of FIXED_PAIRS) {
+    const idxA = pool.findIndex((p) => p.toLowerCase() === a.toLowerCase());
+    const idxB = pool.findIndex((p) => p.toLowerCase() === b.toLowerCase());
+    if (idxA !== -1 && idxB !== -1) {
+      fixedMembers.push([pool[idxA], pool[idxB]]);
+      pool = pool.filter((_, i) => i !== idxA && i !== idxB);
+    }
+  }
+
+  const shuffled = shuffle(pool);
+  const pairs: Pair[] = fixedMembers.map((members, i) => ({ id: i, members }));
+  const offset = pairs.length;
   for (let i = 0; i < shuffled.length - 1; i += TEAM_SIZE) {
     pairs.push({
-      id: i / TEAM_SIZE,
+      id: offset + i / TEAM_SIZE,
       members: [shuffled[i], shuffled[i + 1]],
     });
   }
