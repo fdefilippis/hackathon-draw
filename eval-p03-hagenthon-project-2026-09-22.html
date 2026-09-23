@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — hagenthon-project</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+  .brand .logo {
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .brand .tool {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+  .repo {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    word-break: break-all;
+  }
+  .score-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161, 0, 255, 0.4);
+  }
+  .score-big span { font-size: 2.5rem; font-weight: 700; color: var(--text-muted); }
+  .verdict {
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-top: 1.5rem;
+    line-height: 1.6;
+    font-size: 1.05rem;
+  }
+  .hero-date {
+    position: absolute;
+    right: 4rem;
+    bottom: 3rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Section shell ---------- */
+  .section-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+  }
+
+  /* ---------- Breakdown ---------- */
+  .breakdown {
+    padding: 2.5rem 4rem;
+    background: var(--surface);
+  }
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .cell-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .cell-score {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .bar {
+    height: 3px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #A100FF, #C84BFF);
+    border-radius: 2px;
+  }
+  .cell-contrib {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+  .cell.unweighted { opacity: 0.4; filter: grayscale(1); }
+  .cell.unweighted .bar-fill { background: #555; }
+
+  /* ---------- Criteria ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .card-name {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+  }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161, 0, 255, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .card-comment {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+  article.unweighted {
+    opacity: 0.45;
+    filter: grayscale(1);
+  }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge {
+    background: #1e1e1e;
+    color: #555;
+    border-color: #333;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+  article.unweighted .bar-fill { background: #444; }
+
+  /* ---------- Global ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card p {
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 1000px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .breakdown-grid { grid-template-columns: repeat(2, 1fr); }
+    .criteria-grid { grid-template-columns: 1fr; }
+    .score-big { font-size: 4.5rem; }
+    .hero-date { position: static; margin-top: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">&#9654; ACCENTURE</span>
+    <span class="tool">Hackathon Evaluator</span>
+  </div>
+  <div class="repo">https://github.com/MWNemesis/hagenthon-project</div>
+  <div class="score-label">Overall Score</div>
+  <div class="score-big">72<span>/100</span></div>
+  <div class="verdict">Orchestrazione skill/agenti ben separata e documentata, penalizzata da duplicazione del codice e tool dichiarati incoerenti con il compito</div>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">Score Breakdown</div>
+  <div class="breakdown-grid">
+
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+      <div class="cell-contrib">24% &middot; 18.7</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">82</div>
+      <div class="bar"><div class="bar-fill" style="width:82%"></div></div>
+      <div class="cell-contrib">19% &middot; 15.6</div>
+    </div>
+
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">80</div>
+      <div class="bar"><div class="bar-fill" style="width:80%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">68</div>
+      <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+      <div class="cell-contrib">15% &middot; 10.2</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">62</div>
+      <div class="bar"><div class="bar-fill" style="width:62%"></div></div>
+      <div class="cell-contrib">12% &middot; 7.4</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">62</div>
+      <div class="bar"><div class="bar-fill" style="width:62%"></div></div>
+      <div class="cell-contrib">11% &middot; 6.8</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">64</div>
+      <div class="bar"><div class="bar-fill" style="width:64%"></div></div>
+      <div class="cell-contrib">12% &middot; 7.7</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">84</div>
+      <div class="bar"><div class="bar-fill" style="width:84%"></div></div>
+      <div class="cell-contrib">7% &middot; 5.9</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">Detailed Analysis</div>
+  <div class="criteria-grid">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">78</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+      <p class="card-comment">Architettura a due livelli con separazione netta: 7 skill invocabili (<code>agents/skills/</code>) e 5 agenti specializzati delegati (<code>agents/agents/</code>), con orchestratore esplicito in <code>generate-mission.md</code> che gestisce un flusso a 6 fasi con checkpoint. Lo stato è esternalizzato in <code>app/missions/_catalog.json</code> con campo <code>status: ready|incomplete</code> che fa da vero handoff tra <code>portal-analyzer</code> e <code>batch-generate</code>; manca però memoria persistente tra sessioni e qualsiasi limite di iterazione.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">82</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:82%"></div></div>
+      <p class="card-comment">Istruzioni notevolmente precise: <code>create-mission.md</code> fissa soglie numeriche (base &le;5 step, medio 6&ndash;10, avanzato &gt;10), enum chiusi per <code>action</code> e convenzioni camelCase per i <code>target</code>, mentre <code>validate-mission.md</code> usa tabelle di check con severità Critico/Warning distinta. Spicca il vincolo motivato in <code>validate-mission.md</code> Fase 3 &mdash; saltare il test browser se ci sono errori bloccanti perché "inaffidabile e costoso" &mdash; e l'ottimizzazione in <code>simulator-builder.md</code> che impone un'analisi globale degli screenshot prima di generare HTML.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">Non pesato</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:80%"></div></div>
+      <p class="card-comment">Problema reale e concreto: formare i neoassunti sulle procedure del portale aziendale, con missioni timesheet plausibili e non inventate. La scelta di confinare l'AI alla sola fase di generazione, lasciando l'app runtime a zero chiamate esterne e offline-capable, è una decisione di design sensata e non un limite.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">68</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+      <p class="card-comment">HITL intenzionale e ben posizionato: quattro checkpoint espliciti in <code>generate-mission.md</code> con opzioni approva/modifica/annulla, esclusione automatica delle missioni <code>incomplete</code> in <code>batch-generate.md</code>, e <code>mission-tester.md</code> che testa anche il path negativo saltando volutamente uno step. Manca però qualsiasi fallback se un agente fallisce o restituisce output malformato, e nel codice non c'è un solo <code>try/catch</code>: <code>JSON.parse(sessionStorage.getItem(...))</code> in <code>tracker.js:complete()</code> esplode su dati corrotti.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">62</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:62%"></div></div>
+      <p class="card-comment">Difetto concreto: la funzione <code>evaluate()</code> è duplicata verbatim in <code>app/js/tracker.js</code> e <code>app/js/evaluator.js</code>, entrambe in scope globale &mdash; se le due pagine caricassero entrambi gli script si avrebbe una ridefinizione silenziosa. Il modulo <code>Tracker</code> è per il resto pulito (IIFE con closure, <code>getLog()</code> che ritorna una copia, event delegation via <code>closest()</code>), ma la valutazione con <code>log.some()</code> ignora l'ordine degli step, il che è discutibile in uno strumento che insegna procedure sequenziali.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">62</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:62%"></div></div>
+      <p class="card-comment">La distinzione skill/agente è ragionata e tabellata in <code>agents/README.md</code>, e gli agenti che servono il browser (<code>mission-tester.md</code>, <code>test-runner.md</code>) dichiarano correttamente i tool MCP <code>Claude_Browser</code>. Il problema è che <code>portal-analyzer.md</code> e <code>simulator-builder.md</code> &mdash; i due agenti il cui compito dichiarato è analizzare screenshot, con input <code>SCREENSHOTS: [&lt;immagine&gt;, ...]</code> &mdash; espongono nel frontmatter solo <code>Read</code>/<code>Write</code>/<code>Bash</code>, senza alcun tool di visione.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">64</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:64%"></div></div>
+      <p class="card-comment">Il caricamento è selettivo per costruzione: le skill si attivano su invocazione <code>/nome-skill</code> e <code>agents/README.md</code> funziona da indice che rimanda ai singoli file, senza alcun CLAUDE.md monolitico sempre attivo. Pesa però la duplicazione tra livelli: il template HTML completo compare quasi identico sia in <code>generate-simulator.md</code> sia in <code>simulator-builder.md</code>, e lo schema JSON della missione è ridescritto tra <code>create-mission.md</code>, <code>validate-mission.md</code> e <code>portal-analyzer.md</code> &mdash; contenuto che viene caricato due volte a ogni delega.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">84</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:84%"></div></div>
+      <p class="card-comment">Doppio livello di documentazione efficace: il <code>README.md</code> di root copre architettura, split generazione/fruizione, albero del progetto e diagramma del flusso di creazione, mentre <code>agents/README.md</code> fornisce il catalogo completo con tabelle file/invocazione/output e una tabella decisionale skill-vs-agente. Ogni file di skill e agente è poi autodocumentato con Scopo, Come invocarla e Processo; resta poco chiaro come la cartella <code>agents/</code> vada mappata sulla configurazione reale di Claude Code.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">Global Assessment</div>
+  <div class="global-card">
+    <p>Il progetto è uno dei più ordinati sul piano dell'organizzazione agentica: la separazione tra skill invocabili e agenti delegati non è nominale ma sostanziata da criteri espliciti, e il passaggio di stato via <code>_catalog.json</code> con flag di completezza è un handoff vero tra componenti, non una semplice catena di prompt. Le istruzioni sono sopra la media per densità di vincoli verificabili &mdash; soglie numeriche, enum chiusi, tabelle di check con severità &mdash; e in più punti spiegano il perché di una regola invece di limitarsi a imporla. Il divario si apre scendendo verso l'implementazione: <code>evaluate()</code> duplicata in due file globali è debito tecnico immediato, l'assenza totale di error handling nel JavaScript contraddice la cura riposta nella validazione a monte, e i due agenti che devono leggere screenshot non dichiarano tool di visione. Manca inoltre qualsiasi strategia per il caso in cui un agente fallisca: tutti i checkpoint previsti presuppongono un output ben formato. Con la deduplicazione del codice, un allineamento dei tool dichiarati e un fallback esplicito sugli agenti, il progetto salirebbe agevolmente sopra l'80.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

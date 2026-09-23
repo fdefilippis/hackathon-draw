@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — hackaton-team-13</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  .brand .logo {
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .brand .tool {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+  .repo {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 1.75rem;
+    word-break: break-all;
+  }
+  .score-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+  .score-value {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161, 0, 255, 0.4);
+  }
+  .score-value span { font-size: 2.5rem; font-weight: 700; color: var(--text-muted); }
+  .verdict {
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+  .hero-date {
+    position: absolute;
+    right: 4rem;
+    bottom: 3rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Sections ---------- */
+  .section-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+  }
+
+  /* ---------- Breakdown ---------- */
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .cell-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .bar {
+    height: 3px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #A100FF, #C84BFF);
+    border-radius: 2px;
+  }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+  .cell.unweighted { opacity: 0.4; filter: grayscale(1); }
+  .cell.unweighted .bar-fill { background: #555; }
+
+  /* ---------- Criteria ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .card-name {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+  }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161, 0, 255, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  article p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+
+  article.unweighted { opacity: 0.45; filter: grayscale(1); }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge {
+    background: #1e1e1e;
+    color: #555;
+    border-color: #333;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+  article.unweighted .bar-fill { background: #444; }
+
+  /* ---------- Global ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 900px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .breakdown-grid { grid-template-columns: repeat(2, 1fr); }
+    .criteria-grid { grid-template-columns: 1fr; }
+    .score-value { font-size: 4.5rem; }
+    .hero-date { position: static; margin-top: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">&#9654; ACCENTURE</span>
+    <span class="tool">Hackathon Evaluator</span>
+  </div>
+  <div class="repo">https://github.com/contug/hackaton-team-13</div>
+  <div class="score-label">Overall Score</div>
+  <div class="score-value">64<span>/100</span></div>
+  <p class="verdict">Ingegneria del contesto e disciplina di verifica eccellenti, ma privo di un vero strato di orchestrazione</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">Score Breakdown</div>
+  <div class="breakdown-grid">
+
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">38</div>
+      <div class="bar"><div class="bar-fill" style="width:38%"></div></div>
+      <div class="cell-contrib">peso 24% &middot; contributo 9.1</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">88</div>
+      <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+      <div class="cell-contrib">peso 19% &middot; contributo 16.7</div>
+    </div>
+
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">85</div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">72</div>
+      <div class="bar"><div class="bar-fill" style="width:72%"></div></div>
+      <div class="cell-contrib">peso 15% &middot; contributo 10.8</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">84</div>
+      <div class="bar"><div class="bar-fill" style="width:84%"></div></div>
+      <div class="cell-contrib">peso 12% &middot; contributo 10.1</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">55</div>
+      <div class="bar"><div class="bar-fill" style="width:55%"></div></div>
+      <div class="cell-contrib">peso 11% &middot; contributo 6.1</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">42</div>
+      <div class="bar"><div class="bar-fill" style="width:42%"></div></div>
+      <div class="cell-contrib">peso 12% &middot; contributo 5.0</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">86</div>
+      <div class="bar"><div class="bar-fill" style="width:86%"></div></div>
+      <div class="cell-contrib">peso 7% &middot; contributo 6.0</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">Detailed Analysis</div>
+  <div class="criteria-grid">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">38</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:38%"></div></div>
+      <p>Nessun sub-agente, nessun MCP, nessuna skill scritta dal team e nessun workflow multi-step con handoff: il lavoro &egrave; svolto da un singolo agente nel thread principale con un solo hook <code>PostToolUse</code> (<code>agents/.claude/settings.json</code>). Riconosciuto invece il pattern di memoria persistente realmente ingegnerizzato &mdash; <code>claude-changelog.md</code> append-only con <code>.gitattributes merge=union</code>, che rende lo stato condivisibile tra worktree paralleli (due merge di feature branch nella history) senza conflitti.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">88</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+      <p><code>app/CLAUDE.md</code> &egrave; di qualit&agrave; rara: vincoli di prodotto dichiarati come design non negoziabile ("It is not a chat"), sezione <em>Out of scope</em> esplicita, formato d'ingresso del changelog imposto con campo <code>Verify:</code> che deve nominare il test, e motivazione tecnica per ogni divieto (perch&eacute; non <code>ResizeObserver</code>, perch&eacute; non <code>wxt:locationchange</code>, perch&eacute; il native value setter). Limite: file monolitico che mescola regole sempre valide e narrativa implementativa profonda, senza separazione tra parte stabile e parte variabile.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">Non pesato</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <p>Ridurre il carico cognitivo su pagine dense con un walkthrough guidato che sopravvive alla navigazione, ancorato a elementi reali del DOM e con autofill, &egrave; un problema autentico con una forte angolazione di accessibilit&agrave;. La visione di prodotto &egrave; netta e difesa architetturalmente: una sola risposta a schermo, nessuno scrollback.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">72</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:72%"></div></div>
+      <p>Degradazione a tre stadi sulle risposte strutturate (schema &rarr; retry con JSON inlined nel prompt &rarr; testo grezzo) che non lancia mai un parse error non gestito, <code>friendlyError</code> che mappa ogni status HTTP, e un gate di autofill solido &mdash; solo su azione dell'utente, con blocklist su <code>password</code>, <code>cc-number</code>, <code>cc-csc</code>, <code>cc-exp</code>, <code>one-time-code</code>, <code>disabled</code>, <code>readOnly</code>. Buco concreto: <strong>nessun timeout sulle chiamate LLM</strong> &mdash; <code>signal?: AbortSignal</code> &egrave; cablato nelle firme di <code>summarizePage</code>/<code>askAboutPage</code>/<code>nextSteps</code> ma <code>lib/handlers.ts</code> non lo passa mai, quindi una richiesta appesa non rientra.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">84</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:84%"></div></div>
+      <p>16 file di test (Vitest + jsdom) pi&ugrave; Playwright end-to-end sull'estensione realmente buildata, con <code>npm run check</code> come gate dichiarato. La disciplina di purezza &egrave; architettura vera, non stile: <code>lib/spotlight.ts</code> e <code>lib/journey.ts</code> sono funzioni pure su rect e JSON proprio perch&eacute; jsdom non implementa layout, quindi la geometria resta dimostrabile. <code>lib/openrouter.ts</code> &mdash; API AI esterna, valutata qui &mdash; &egrave; curato (classe d'errore tipizzata, schemi <code>strict</code> con workaround documentati, clamp client-side); resta il difetto del parametro <code>signal</code> cablato ma mai fornito.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">55</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:55%"></div></div>
+      <p>Le scelte del team sono azzeccate: hook per i test con allowlist di path, cos&igrave; una modifica a <code>CLAUDE.md</code> o al changelog non innesca una run; worktree paralleli per le feature. Penalizzato per&ograve; l'inserimento di 37 skill BMAD di terze parti in <code>agents/global-claude-settings/skills/</code> nel commit "global claude setup" delle 13:30, due minuti prima dell'ultimo commit e dopo che tutte le feature erano gi&agrave; mergiate: materiale ridondante e mai usato per costruire il progetto.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">42</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:42%"></div></div>
+      <p>Lo strato agentici sempre attivo &egrave; ampio e senza alcuna strategia: <code>CLAUDE.md</code> pesa ~17.8 KB (~4.4k token) in un unico blocco, senza <code>@import</code> n&eacute; separazione tra regole stabili e narrativa implementativa. A questo si somma <code>claude-changelog.md</code> a ~37 KB (~9.3k token) in crescita monotona e scritto a ogni turno per mandato, pi&ugrave; le 37 skill vendored che restano nella superficie globale pur essendo estranee al progetto. Nessun prompt caching dichiarato, nessun chunking, nessun pattern index-first; il contenuto per&ograve; non &egrave; ridondante, il che evita il cap pieno.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">86</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:86%"></div></div>
+      <p><code>README.md</code> &egrave; asciutto e corretto &mdash; layout del repo, getting started, tabella comandi, stack, e il rimando esplicito a <code>CLAUDE.md</code> come documento autoritativo. Il changelog fornisce un audit trail completo di 24 entry e l'ultima registra con onest&agrave; non comune i limiti noti: race del poll URL non asserita, click invisibili dentro shadow DOM e iframe, controlli duplicati non indirizzabili, e "the one leak by design". Manca per&ograve; una spiegazione del flusso agentici per il lettore e nulla segnala che l'albero BMAD &egrave; di terze parti e inutilizzato.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">Global Assessment</div>
+  <div class="global-card">
+    <p>Il progetto &egrave; forte dove conta di pi&ugrave; per un prodotto reale e debole proprio sull'asse agentici che pesa di pi&ugrave; in questa valutazione. La qualit&agrave; di <code>CLAUDE.md</code>, la disciplina del changelog append-only reso mergiabile tra worktree e l'hook <code>PostToolUse</code> con allowlist mostrano una comprensione matura di come si governa un agente: regole deterministiche invece di speranze, e memoria esternalizzata invece di contesto trattenuto. Manca per&ograve; qualunque orchestrazione &mdash; nessun sub-agente, nessun handoff, nessun MCP &mdash; e le 37 skill BMAD aggiunte a lavoro finito non colmano quel vuoto, anzi pesano come ridondanza. Sul piano applicativo la degradazione a tre stadi dell'output strutturato e il gate di autofill sono robustezza autentica, ma l'assenza di timeout sulle chiamate LLM &egrave; una falla concreta e facilmente chiudibile, resa pi&ugrave; evidente dal fatto che il parametro <code>signal</code> &egrave; gi&agrave; cablato e attende solo di essere passato. Con un layer di deleghe e un chunking di <code>CLAUDE.md</code> questo sarebbe un progetto di fascia alta.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

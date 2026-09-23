@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — hagenton-inclusione-finanziaria</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+  }
+
+  /* 1. HERO */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  .brand .logo {
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .brand .tool {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+  }
+  .repo-name {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    word-break: break-all;
+  }
+  .score-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+  }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161, 0, 255, 0.4);
+  }
+  .score-big span {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-shadow: none;
+  }
+  .verdict {
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-top: 1.25rem;
+    font-size: 1rem;
+  }
+  .hero-date {
+    position: absolute;
+    bottom: 3rem;
+    right: 4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* 2. BREAKDOWN */
+  .breakdown {
+    padding: 2.5rem 4rem;
+    background: var(--surface);
+  }
+  .section-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 1.75rem;
+    font-weight: 600;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .cell-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .cell-score {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 0.35rem;
+  }
+  .bar {
+    height: 3px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #A100FF, #C84BFF);
+    border-radius: 2px;
+  }
+  .cell-contrib {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+  .cell.unweighted {
+    opacity: 0.4;
+    filter: grayscale(1);
+  }
+  .cell.unweighted .bar-fill { background: #555; }
+
+  /* 3. CRITERIA */
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .card-name {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+  }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161, 0, 255, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .card-comment {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+  article.unweighted {
+    opacity: 0.45;
+    filter: grayscale(1);
+  }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge {
+    background: #1e1e1e;
+    color: #555;
+    border-color: #333;
+    font-size: 0.7rem;
+  }
+  article.unweighted .bar-fill { background: #444; }
+
+  /* 4. GLOBAL */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card .section-title { margin-bottom: 1rem; }
+  .global-card p {
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+
+  /* 5. FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer span {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 1000px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .score-big { font-size: 4.5rem; }
+    .hero-date { position: static; margin-top: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">&#9654; ACCENTURE</span>
+    <span class="tool">HACKATHON EVALUATOR</span>
+  </div>
+  <div class="repo-name">https://github.com/VeronicaFontana/hagenton-inclusione-finanziaria</div>
+  <div class="score-label">OVERALL SCORE</div>
+  <div class="score-big">69<span>/100</span></div>
+  <p class="verdict">Layer agentico di qualità notevole, artefatto consegnato che non ne raccoglie i frutti</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">SCORE BREAKDOWN</div>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+      <div class="cell-contrib">18.7 &middot; peso 24%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">85</div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <div class="cell-contrib">16.2 &middot; peso 19%</div>
+    </div>
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">80</div>
+      <div class="bar"><div class="bar-fill" style="width:80%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">45</div>
+      <div class="bar"><div class="bar-fill" style="width:45%"></div></div>
+      <div class="cell-contrib">6.8 &middot; peso 15%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">58</div>
+      <div class="bar"><div class="bar-fill" style="width:58%"></div></div>
+      <div class="cell-contrib">7.0 &middot; peso 12%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">76</div>
+      <div class="bar"><div class="bar-fill" style="width:76%"></div></div>
+      <div class="cell-contrib">8.4 &middot; peso 11%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">70</div>
+      <div class="bar"><div class="bar-fill" style="width:70%"></div></div>
+      <div class="cell-contrib">8.4 &middot; peso 12%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">55</div>
+      <div class="bar"><div class="bar-fill" style="width:55%"></div></div>
+      <div class="cell-contrib">3.9 &middot; peso 7%</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">DETAILED ANALYSIS</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">78</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+      <p class="card-comment">Dieci agenti in <code>.claude/agents/</code> con perimetri disgiunti e dichiarati per negazione (ogni file elenca cosa <em>non</em> tocca e nomina l'agente proprietario), più un <code>orchestratore-agent.md</code> che possiede il tool <code>Agent</code> e scompone la richiesta per ambito prima di delegare; <code>compliance-reviewer-agent.md</code> è di sola lettura con mandato esplicito &laquo;identifichi, non correggi&raquo;, una vera separazione dei poteri. Manca però il livello architetturale: nessuno stato esternalizzato tra agenti, nessun contratto di output strutturato negli handoff, model tiering piatto (tutti <code>sonnet</code>) e nessuna memoria persistente tra sessioni.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">85</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <p class="card-comment">Le istruzioni sono il punto più forte del progetto: ogni <code>description</code> contiene trigger &laquo;Usare per QUALUNQUE&hellip; / Non usare per&hellip;&raquo;, ogni corpo ha sezione &laquo;Ambito, stretto&raquo;, procedura numerata in &laquo;Come lavorare&raquo; e &laquo;Output atteso&raquo;. La distinzione fra <code>accessibilita-tecnica-agent</code> (WCAG, markup) e <code>ui-accessibilita-agent</code> (chiarezza cognitiva) è esplicitata in entrambi i file come non-sovrapposizione deliberata; resta una lieve duplicazione sul vincolo compliance, applicato sia &laquo;in mente&raquo; dagli autori sia dal reviewer finale.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">NON PESATO</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:80%"></div></div>
+      <p class="card-comment">Problema reale e ben delimitato: simulare le rate di un mutuo per utenti con bassa alfabetizzazione finanziaria, con il vincolo forte di non comportarsi mai da consulente. Il vincolo di neutralità è trattato come requisito di dominio di prima classe, non come disclaimer, e questo dà al progetto un'identità che un template non avrebbe.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">45</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:45%"></div></div>
+      <p class="card-comment">La suite di test non esiste: <code>test-agent.md</code> e la skill <code>validazione-numerica</code> descrivono casi fissi, test di proprietà e tolleranza cumulata <code>n &times; 0,005 &euro;</code>, ma nel repo non c'è alcun file eseguibile di test, e <code>casi-test.md</code> dichiara onestamente che nessuno dei 5 casi è stato confrontato con un simulatore bancario reale &mdash; il requisito &laquo;dati reali&raquo; resta quindi scoperto. Nel codice ci sono 3 soli <code>try/catch</code> su 128&nbsp;KB; l'unico fallback davvero progettato è quello del widget di traduzione (retry con backoff, tetto ai tentativi, <code>MutationObserver</code> per la banner-bar), e il gate obbligatorio del compliance reviewer prima del merge è escalation intenzionale corretta.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">58</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:58%"></div></div>
+      <p class="card-comment"><code>calcRata</code> (app/mutuo_educativo.html:1058) è numericamente corretto e allineato a <code>reference.py</code> (100.000&nbsp;&euro; / 3% / 20 anni &rarr; 554,60&nbsp;&euro;), e la struttura a <code>renderXxx</code> per step è leggibile. Il difetto grave è che la convenzione di conversione del tasso è cablata come <code>tasso_annuo/100/12</code> senza alcuna configurabilità: è esattamente l'errore silenzioso contro cui mette in guardia la skill <code>formule-mutuo</code> e che l'istruzione 3 di <code>calcolo-mutuo-agent</code> vieta (&laquo;mai implicita nel codice&raquo;), quindi il vincolo scritto non è stato rispettato dall'artefatto.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">76</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:76%"></div></div>
+      <p class="card-comment">Le scelte sono ponderate: skill per la conoscenza stabile (formule, API Chart.js, regole del glossario) con <code>reference.py</code> e <code>reference-esempio.html</code> come verità eseguibile invece che prosa, e <code>tools:</code> ritagliato per agente &mdash; <code>compliance-reviewer-agent</code> ha solo <code>Read, Grep, Glob, Skill, ReportFindings</code>, coerente col mandato di non scrivere. Dieci agenti per un progetto che consegna una singola pagina HTML restano però sovradimensionati, con <code>traduzione-agent</code> che presidia un'integrazione di poche decine di righe.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">70</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:70%"></div></div>
+      <p class="card-comment">Nessun CLAUDE.md, quindi zero contesto sempre caricato, e le skill sono invocate on-demand come primo passo esplicito di ogni agente: retrieval selettivo corretto. Buono anche il chunking, con la conoscenza spezzata fra <code>SKILL.md</code> e file satellite (<code>reference.py</code>, <code>frasi-vietate.md</code>, <code>casi-test.md</code>); pesa invece la ridondanza dell'orchestratore, che riepiloga il perimetro di tutti e dieci gli agenti già descritto nei rispettivi file, e l'assenza di qualunque strategia di prompt caching.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">55</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:55%"></div></div>
+      <p class="card-comment">Il README spiega bene il problema, l'avvio locale e il doppio server per app e presentazione, incluso il dettaglio non ovvio che la presentazione serve l'intera cartella per far funzionare il link finale. Il limite è che documenta solo <em>come eseguire</em>: dieci agenti e sette skill non sono mai nominati, così un giudice che legga solo il README non scoprirebbe l'esistenza del layer agentico, che è la parte migliore del lavoro.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="global-card">
+    <div class="section-title">GLOBAL ASSESSMENT</div>
+    <p>Il progetto mostra una comprensione della progettazione agentica sopra la media del campo: i perimetri fra i dieci agenti sono definiti per negazione e reggono alla lettura incrociata, l'orchestratore delega invece di eseguire, e il compliance reviewer di sola lettura traduce il vincolo regolatorio della traccia in un gate architetturale, non in un disclaimer. Le sette skill sono usate correttamente come conoscenza codificata e versionata, con <code>reference.py</code> come fonte di verità numerica anziché formule riscritte a memoria. Lo scarto sta fra questo impianto e ciò che è stato effettivamente consegnato: la suite di validazione che l'impianto prescrive non esiste, nessun caso è stato verificato contro un simulatore bancario, e il motore cabla proprio la convenzione di tasso che la skill impone di rendere esplicita &mdash; il progetto ha scritto ottime regole e poi non le ha fatte rispettare a se stesso. Con i test implementati e la convenzione resa configurabile il punteggio salirebbe sensibilmente, perché la parte difficile &mdash; pensare l'architettura &mdash; è già fatta bene.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

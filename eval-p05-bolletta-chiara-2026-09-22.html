@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — bolletta-chiara</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; }
+  .brand .logo { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; }
+  .brand .tool { color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; }
+  .repo { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; word-break: break-all; }
+  .score-label { font-size: 0.75rem; letter-spacing: 0.3em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem; }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161,0,255,0.4);
+  }
+  .verdict { font-style: italic; color: var(--text-muted); max-width: 600px; margin-top: 1.25rem; line-height: 1.6; }
+  .hero-date { position: absolute; bottom: 3rem; right: 4rem; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.1em; }
+
+  /* ---------- Section titles ---------- */
+  .section-title { letter-spacing: 0.2em; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; margin-bottom: 1.75rem; font-weight: 600; }
+
+  /* ---------- Breakdown ---------- */
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .cell.muted { opacity: 0.4; filter: grayscale(1); }
+  .cell.muted .bar-fill { background: #555; }
+
+  /* ---------- Criteria ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .card-name { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161,0,255,0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .card-comment { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+  article.muted { opacity: 0.45; filter: grayscale(1); }
+  article.muted:hover { border-color: var(--border); }
+  article.muted .card-name { color: #555; }
+  article.muted .badge { background: #1e1e1e; color: #555; border-color: #333; font-size: 0.7rem; letter-spacing: 0.1em; }
+  article.muted .bar-fill { background: #444; }
+
+  /* ---------- Global ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 1100px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    header, .breakdown, .criteria, .global, footer { padding-left: 2rem; padding-right: 2rem; }
+    .hero-date { right: 2rem; }
+    .score-big { font-size: 5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">&#9654; ACCENTURE</span>
+    <span class="tool">Hackathon Evaluator</span>
+  </div>
+  <div class="repo">https://github.com/piercarmine-de-marco/bolletta-chiara</div>
+  <div class="score-label">Overall Score</div>
+  <div class="score-big">66<span style="font-size:2rem;font-weight:400;color:var(--text-muted)">/100</span></div>
+  <p class="verdict">Orchestrazione e prompt eccellenti, runtime dev-only ne limita la maturità</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">Score Breakdown</div>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">70</div>
+      <div class="bar"><div class="bar-fill" style="width:70%"></div></div>
+      <div class="cell-contrib">24% &middot; 16.8</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">85</div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <div class="cell-contrib">19% &middot; 16.2</div>
+    </div>
+    <div class="cell muted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">85</div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">55</div>
+      <div class="bar"><div class="bar-fill" style="width:55%"></div></div>
+      <div class="cell-contrib">15% &middot; 8.3</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">52</div>
+      <div class="bar"><div class="bar-fill" style="width:52%"></div></div>
+      <div class="cell-contrib">12% &middot; 6.2</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">60</div>
+      <div class="bar"><div class="bar-fill" style="width:60%"></div></div>
+      <div class="cell-contrib">11% &middot; 6.6</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">60</div>
+      <div class="bar"><div class="bar-fill" style="width:60%"></div></div>
+      <div class="cell-contrib">12% &middot; 7.2</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">62</div>
+      <div class="bar"><div class="bar-fill" style="width:62%"></div></div>
+      <div class="cell-contrib">7% &middot; 4.3</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">Detailed Analysis</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">70</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:70%"></div></div>
+      <p class="card-comment">Orchestratore a eventi reale (<code>src/agents/orchestratore.js</code>) che instrada <code>BOLLETTA_CARICATA</code> / <code>RECLAMO_AVVIATO</code> / <code>UTENTE_BLOCCATO</code> verso sei agenti a scope disgiunto, con stato esternalizzato nel context documentato come contratto immutabile in <code>CLAUDE.md</code> e log per ogni transizione evento&rarr;agente&rarr;esito. La profondità è però limitata da agenti sottili &mdash; wrapper di prompt più chiamata CLI, senza pianificazione né iterazione &mdash; e da un runtime che vive unicamente nel middleware dev di <code>vite.config.js</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">85</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <p class="card-comment">I sei file in <code>src/prompts/</code> dichiarano schema JSON esatto, regole di mappatura campo per campo, tipi, limiti di lunghezza e vincoli negativi espliciti ("non suggerire quale opzione scegliere"), con anti-preamble sistematico su ogni prompt. <code>CLAUDE.md</code> separa contratto dati immutabile, tabella eventi&rarr;agenti, regole UI misurabili (18px minimi, bottoni 48px) e priorità MUST/NICE/TAGLIA; unico neo l'istruzione di incollare l'intero file a ogni sessione.</p>
+    </article>
+
+    <article class="muted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">NON PESATO</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <p class="card-comment">Problema concreto e ben circoscritto &mdash; una persona anziana bloccata davanti a un form burocratico &mdash; con l'AI che porta valore reale su estrazione PDF, autocompilazione e semplificazione del linguaggio. La scelta etica di vietare al tool ogni interpretazione o consiglio (sezione "Il tool non deve mai") è matura per un'utenza vulnerabile.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">55</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:55%"></div></div>
+      <p class="card-comment">Ogni ramo dell'orchestratore ha try/catch con log dell'esito, gli agenti traducono gli errori tecnici in messaggi semplici, i timeout CLI sono espliciti (60s) e <code>parseClaudeResponse</code> difende dal fence markdown; l'HITL è intenzionale e strutturale, non un ripiego. Mancano però retry, validazione a runtime dello schema e soprattutto un percorso degradato: se <code>estratto-agent.js</code> fallisce Maria resta senza alternativa, e <code>CLAUDE.md</code> colloca esplicitamente la gestione errori sotto "TAGLIA SUBITO".</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">52</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:52%"></div></div>
+      <p class="card-comment"><code>CLAUDE_BIN</code> è un path assoluto alla home di uno sviluppatore, duplicato in quattro file, e il bridge <code>/api/claude</code> vive in <code>configureServer</code> di <code>vite.config.js</code>: il progetto non è eseguibile da altri né deployabile, nonostante <code>@anthropic-ai/sdk</code> sia già in dipendenza e mai usato. Pesano anche le funzioni di test con auto-invocazione a module scope dentro gli agenti di produzione e il reducer duplicato tra <code>BollettaContext.jsx</code> e <code>scripts/test-orchestratore.mjs</code>, già divergenti nei campi.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">60</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:60%"></div></div>
+      <p class="card-comment">La decomposizione è corretta e senza ridondanze: sei agenti per sei trasformazioni distinte, con Soccorso e Reclamo giustamente marcati opzionali in <code>CLAUDE.md</code>. Sbagliato invece il meccanismo di integrazione &mdash; <code>spawnSync</code> sulla CLI da un middleware Vite al posto dell'SDK già installato, scelta che trascina con sé path hardcoded, chiamate bloccanti e impossibilità di deploy.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">60</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:60%"></div></div>
+      <p class="card-comment">Buona disciplina a runtime: prompt come costanti stabili separate dal payload variabile, contesto selettivo per agente e anti-preamble sistematico con tetti di lunghezza espliciti (150 parole, 2 frasi, 3 opzioni da 10 parole). Penalizzano l'assenza di prompt caching &mdash; ogni <code>claude -p</code> è un processo nuovo che ri-invia il system prompt &mdash; l'istruzione di incollare tutto <code>CLAUDE.md</code> a ogni sessione e lo storico non limitato passato a <code>soccorso-agent.js</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">62</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:62%"></div></div>
+      <p class="card-comment"><code>CLAUDE.md</code> documenta in modo esemplare flusso agentico, diagramma dell'architettura, tabelle eventi/action e struttura delle cartelle. Il <code>README.md</code> è però una sola riga e manca qualsiasi istruzione di setup, lacuna critica qui perché l'esecuzione richiede la CLI Claude installata in un path specifico.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">Global Assessment</div>
+  <div class="global-card">
+    <p>BollettaChiara è il caso in cui il layer di progettazione agentica vale più dell'implementazione: l'orchestratore a eventi, i sei agenti a scope disgiunto e il contratto JSON dichiarato immutabile compongono un'architettura leggibile e coerente, e i prompt in <code>src/prompts/</code> sono tra i più rigorosi visti per schema e vincoli negativi. La debolezza sta nel runtime: l'integrazione via <code>spawnSync</code> sulla CLI dentro il middleware dev di Vite, con il binario hardcoded sulla home di uno sviluppatore, rende il progetto non eseguibile da terzi e non deployabile, mentre <code>@anthropic-ai/sdk</code> resta installato e inutilizzato. Sul fronte affidabilità mancano retry e percorso degradato, e per un tool di accessibilità il fallimento dell'estrazione lascia proprio l'utente target senza alternative &mdash; un rischio che <code>CLAUDE.md</code> accetta esplicitamente mettendo la gestione errori tra le cose da tagliare. Con il README ridotto a una riga, il progetto documenta benissimo come è pensato e per niente come si esegue.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

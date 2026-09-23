@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — RaffaelePacilio/hackton</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; }
+  .brand .logo { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; }
+  .brand .tool { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; }
+  .repo { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; word-break: break-all; }
+  .score-label { letter-spacing: 0.3em; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem; }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161,0,255,0.4);
+  }
+  .score-big span { font-size: 2.5rem; font-weight: 700; color: var(--text-muted); }
+  .verdict { font-style: italic; color: var(--text-muted); max-width: 600px; margin-top: 1.5rem; font-size: 1rem; }
+  .date-tr { position: absolute; top: 3rem; right: 4rem; color: var(--text-muted); font-size: 0.8rem; }
+
+  section { padding: 2.5rem 4rem; }
+  .sec-title { letter-spacing: 0.2em; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; font-weight: 700; margin-bottom: 1.75rem; }
+
+  .breakdown { background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .cell.unweighted { opacity: 0.4; filter: grayscale(1); }
+  .cell.unweighted .bar-fill { background: #555; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .card-name { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161,0,255,0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .card-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+  article.unweighted { opacity: 0.45; filter: grayscale(1); }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge { background: #1e1e1e; color: #555; border-color: #333; font-size: 0.7rem; letter-spacing: 0.1em; }
+  article.unweighted .bar-fill { background: #444; }
+
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card h2 { color: var(--accent); letter-spacing: 0.2em; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 1rem; }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 1100px) {
+    header, section, footer { padding-left: 2rem; padding-right: 2rem; }
+    .date-tr { right: 2rem; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .score-big { font-size: 5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">&#9654; ACCENTURE</span>
+    <span class="tool">Hackathon Evaluator</span>
+  </div>
+  <div class="date-tr">2026-09-22</div>
+  <div class="repo">https://github.com/RaffaelePacilio/hackton</div>
+  <div class="score-label">Overall Score</div>
+  <div class="score-big">80<span>/100</span></div>
+  <p class="verdict">Architettura agentica rigorosa e contratti eccellenti, penalizzata da igiene del repo e duplicazione dei prompt</p>
+</header>
+
+<section class="breakdown">
+  <div class="sec-title">Score Breakdown</div>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">82</div>
+      <div class="bar"><div class="bar-fill" style="width:82%"></div></div>
+      <div class="cell-contrib">24% &middot; 19.7</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">84</div>
+      <div class="bar"><div class="bar-fill" style="width:84%"></div></div>
+      <div class="cell-contrib">19% &middot; 16.0</div>
+    </div>
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">90</div>
+      <div class="bar"><div class="bar-fill" style="width:90%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">86</div>
+      <div class="bar"><div class="bar-fill" style="width:86%"></div></div>
+      <div class="cell-contrib">15% &middot; 12.9</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">70</div>
+      <div class="bar"><div class="bar-fill" style="width:70%"></div></div>
+      <div class="cell-contrib">12% &middot; 8.4</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+      <div class="cell-contrib">11% &middot; 8.6</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">68</div>
+      <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+      <div class="cell-contrib">12% &middot; 8.2</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">84</div>
+      <div class="bar"><div class="bar-fill" style="width:84%"></div></div>
+      <div class="cell-contrib">7% &middot; 5.9</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="sec-title">Detailed Analysis</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">82</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:82%"></div></div>
+      <p class="card-text"><code>packages/agent-runtime/src/orchestrator.ts</code> implementa un guscio deterministico attorno a una singola chiamata LLM per Barrier, con provider chain a tre livelli (reale/stub/null) e uno Skill Registry chiuso di 22 skill versionate (<code>packages/skill-sdk/registry/</code>) che esclude per design la generazione di codice a runtime. Il layer Claude &egrave; per&ograve; documentale &mdash; 20 prompt in <code>aua/docs/agent-prompts.md</code> da incollare a mano in agenti paralleli &mdash; senza primitive native configurate (<code>.claude/agents</code>, skills, hooks, MCP assenti).</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">84</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:84%"></div></div>
+      <p class="card-text">I prompt sono tra i migliori del lotto: perimetri disgiunti espliciti ("Stay within packages/shared/", "non modificare quel file, un altro agente se ne occuper&agrave;"), lista di lettura preventiva in sola lettura, branch dedicato per agente e firme dei tipi da implementare al dettaglio. Penalizzano la convivenza di <code>agent-prompts.md</code> (v1, 20 prompt) e <code>agent-prompts-v2/</code> (14 prompt) senza indicazione di quale sia autoritativo, e i path assoluti Windows hardcoded divergenti tra le due versioni.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">Non pesato</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:90%"></div></div>
+      <p class="card-text">Il problema &egrave; inquadrato con precisione non banale: il fallimento di accessibilit&agrave; come <em>mismatch di modalit&agrave;</em> tra ci&ograve; che il controllo richiede e ci&ograve; che l'utente pu&ograve; eseguire, su siti terzi non modificabili e in tempo reale. L'approccio agentico &egrave; genuinamente necessario &mdash; non decorativo &mdash; e l'<code>InteractionContract</code> dichiarato dall'utente mantiene il bootstrap deterministico e indipendente dall'LLM.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">86</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:86%"></div></div>
+      <p class="card-text">L'orchestratore converte ogni eccezione del provider in un esito <code>decline</code> strutturato senza mai rilanciare, e valida che la skill scelta appartenga al registry rifiutando le allucinazioni del modello. Il contratto skill porta <code>errorModel</code> con flag <code>retryable</code>, <code>rollback</code>, <code>verificationStrategy</code> e classi di capability che isolano <code>PAYMENT</code>/<code>AUTHENTICATE</code>/<code>DESTRUCTIVE</code>, con HITL esplicito via <code>confirm-with-user</code> e precondizioni di acknowledgement su <code>WRITE_PERSONAL_DATA</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">70</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:70%"></div></div>
+      <p class="card-text">Il codice TypeScript &egrave; pulito e tipizzato con onest&agrave; &mdash; <code>IntentResolutionResult</code> esiste proprio per non forzare la risoluzione di intent dentro <code>AgentDecision</code> &mdash; con test su orchestrator, semantic-model, page-bridge e storage. Grave debito di igiene: <code>.playwright-profile/</code> &egrave; committato con 176 file di profilo browser (Cache, History, LOG, Local Storage), insieme a <code>dist/</code> e <code>tsconfig.tsbuildinfo</code>, su 529 file totali di cui solo 353 pertinenti.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">78</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+      <p class="card-text">Le scelte di fondo sono corrette e motivate: ADR-005 rifiuta esplicitamente un framework di orchestrazione portando evidenze, l'LLM &egrave; confinato alla sola superficie di reasoning e il bootstrap resta deterministico. Resta per&ograve; un mismatch: un workflow di 20 agenti paralleli su scope disgiunti &egrave; esattamente il caso d'uso dei subagenti configurati, e gestirlo via copia-incolla manuale di prompt &egrave; lo strumento pi&ugrave; debole per quel task.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">68</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+      <p class="card-text">Positivo il retrieval selettivo: ogni prompt elenca i file da leggere in sola lettura invece di assumere l'intero repo in contesto, e i contratti congelati evitano che gli agenti li ri-derivino. Pesano invece la duplicazione sostanziale tra v1 e v2 degli stessi prompt, le firme dei tipi ripetute verbatim nei prompt quando esistono gi&agrave; in <code>packages/contracts</code>, e l'assenza di un indice sui 20 ADR per l'accesso mirato.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">84</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:84%"></div></div>
+      <p class="card-text">Corredo documentale notevole: 20 ADR numerati, documenti di architettura (executive summary, system context, runtime flows), 4 contratti formali, 6 work package, DAG delle dipendenze e un deck Marp con diagrammi mermaid. Manca per&ograve; un README di root: chi arriva sul repo non ha n&eacute; punto d'ingresso n&eacute; istruzioni di setup.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="global-card">
+    <h2>Global Assessment</h2>
+    <p>&Egrave; il progetto architetturalmente pi&ugrave; maturo del lotto: la separazione tra decisione agentica e esecuzione &egrave; netta, lo Skill Registry chiuso e versionato elimina per costruzione la classe di rischi legata al codice generato al volo, e il tracciamento <code>determinedBy: "rule" | "inference"</code> rende ogni decisione attribuibile. La robustezza non &egrave; dichiarata ma codificata nei tipi &mdash; l'orchestratore che rifiuta una skill non registrata &egrave; il genere di guardrail che raramente si vede in un hackathon. I limiti sono di esecuzione pi&ugrave; che di impianto: il profilo Playwright committato per errore gonfia il repo di un terzo, la coesistenza di due generazioni di prompt lascia ambiguit&agrave; su cosa sia autoritativo, e l'orchestrazione multi-agente resta manuale dove le primitive native l'avrebbero resa riproducibile. Con un <code>.gitignore</code> corretto, il consolidamento dei prompt in un'unica versione e i 20 agenti portati su <code>.claude/agents/</code>, questo progetto starebbe stabilmente sopra 85.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — michelelodi/hagenthon</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand { font-size: 0.8rem; color: var(--accent); font-weight: 700; letter-spacing: 0.05em; }
+  .brand span { color: var(--text-muted); font-weight: 500; margin-left: 0.75rem; letter-spacing: 0.2em; }
+  .repo { font-size: 1.1rem; color: var(--text-muted); margin-top: 1.75rem; }
+  .score-label { letter-spacing: 0.3em; font-size: 0.75rem; color: var(--text-muted); margin-top: 1.5rem; }
+  .score-big {
+    font-size: 7rem; font-weight: 900; color: var(--accent); line-height: 1;
+    text-shadow: 0 0 60px rgba(161,0,255,0.4);
+  }
+  .score-big small { font-size: 2rem; font-weight: 700; color: var(--text-muted); }
+  .verdict { font-style: italic; color: var(--text-muted); max-width: 600px; margin-top: 1.25rem; line-height: 1.6; }
+  .date-hero { position: absolute; right: 4rem; bottom: 3rem; color: var(--text-muted); font-size: 0.8rem; }
+
+  /* Sections */
+  .sec-title { letter-spacing: 0.2em; font-size: 0.75rem; color: var(--accent); font-weight: 700; margin-bottom: 1.75rem; }
+
+  section.breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); margin-top: 0.35rem; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .muted-cell { opacity: 0.4; filter: grayscale(1); }
+  .muted-cell .bar > i { background: #555; }
+
+  section.criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem; transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .card-name { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+  .badge {
+    background: var(--accent-glow); color: var(--accent-light);
+    border: 1px solid rgba(161,0,255,0.3); border-radius: 999px;
+    padding: 0.2rem 0.75rem; font-size: 0.85rem; font-weight: 700; white-space: nowrap;
+  }
+  article p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+  article.muted { opacity: 0.45; filter: grayscale(1); }
+  article.muted:hover { border-color: var(--border); }
+  article.muted .card-name { color: #555; }
+  article.muted .badge { background: #1e1e1e; color: #555; border-color: #333; font-size: 0.7rem; letter-spacing: 0.08em; }
+  article.muted .bar > i { background: #444; }
+
+  section.global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface); border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 1.5rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--text-muted); font-size: 0.8rem;
+  }
+
+  @media (max-width: 1000px) {
+    header, section.breakdown, section.criteria, section.global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .score-big { font-size: 4.5rem; }
+    .date-hero { position: static; margin-top: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">&#9654; ACCENTURE<span>HACKATHON EVALUATOR</span></div>
+  <div class="repo">https://github.com/michelelodi/hagenthon</div>
+  <div class="score-label">OVERALL SCORE</div>
+  <div class="score-big">72<small>/100</small></div>
+  <p class="verdict">Disciplina di contesto notevole (memory versionata + catena ADR), diluita da uno sprawl di skill importate</p>
+  <div class="date-hero">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="sec-title">SCORE BREAKDOWN</div>
+  <div class="grid-4">
+    <div>
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">67</div>
+      <div class="bar"><i style="width:67%"></i></div>
+      <div class="cell-contrib">24% &middot; 16.1</div>
+    </div>
+    <div>
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">80</div>
+      <div class="bar"><i style="width:80%"></i></div>
+      <div class="cell-contrib">19% &middot; 15.2</div>
+    </div>
+    <div class="muted-cell">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">70</div>
+      <div class="bar"><i style="width:70%"></i></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div>
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">72</div>
+      <div class="bar"><i style="width:72%"></i></div>
+      <div class="cell-contrib">15% &middot; 10.8</div>
+    </div>
+    <div>
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><i style="width:78%"></i></div>
+      <div class="cell-contrib">12% &middot; 9.4</div>
+    </div>
+    <div>
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">62</div>
+      <div class="bar"><i style="width:62%"></i></div>
+      <div class="cell-contrib">11% &middot; 6.8</div>
+    </div>
+    <div>
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">65</div>
+      <div class="bar"><i style="width:65%"></i></div>
+      <div class="cell-contrib">12% &middot; 7.8</div>
+    </div>
+    <div>
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">85</div>
+      <div class="bar"><i style="width:85%"></i></div>
+      <div class="cell-contrib">7% &middot; 6.0</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="sec-title">DETAILED ANALYSIS</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <div class="card-name">Agentic Depth</div>
+        <div class="badge">67</div>
+      </div>
+      <div class="bar"><i style="width:67%"></i></div>
+      <p>L'orchestrazione reale è una sola ma è fatta bene: <code>.claude/skills/discovery/SKILL.md</code> fa fan-out parallelo su <code>discovery-theme-explorer</code> (pinnato Opus+max) con contratto di ritorno e fase di riconciliazione, appoggiandosi a una memory versionata (<code>.claude/memory/</code>, un fatto per file + indice + link <code>[[slug]]</code>) e a una catena ADR in cui 0002 supera esplicitamente in parte 0001. Pesa però che dei 20+ skill in <code>.claude/skills/</code> solo <code>discovery</code> e <code>accenture-brand</code> siano scritti per questo problema, e che il runtime del prodotto sia agentico solo su due giunzioni (vision scontrini, report opzionale) per scelta dichiarata in ADR-0001.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <div class="card-name">Instruction Quality</div>
+        <div class="badge">80</div>
+      </div>
+      <div class="bar"><i style="width:80%"></i></div>
+      <p><code>CLAUDE.md</code> si auto-limita ("Dettagli operativi → skill. Idea scelta e decisioni → memory. Tienilo minimale") e dichiara in testa quali propri confini sono stati superati dagli ADR, invece di restare disallineato — istruzioni oneste sulla propria deriva. <code>discovery-theme-explorer.md</code> è esemplare: rimanda la rubrica alla skill ("le definizioni stanno nella skill, non qui — niente duplicati"), fissa un default esplicito per <code>MODE</code> assente e vieta al worker di interpellare l'utente imponendo <code>FLAG-TRADEOFF</code> come canale di escalation.</p>
+    </article>
+
+    <article class="muted">
+      <div class="card-head">
+        <div class="card-name">Idea Quality</div>
+        <div class="badge">NON PESATO</div>
+      </div>
+      <div class="bar"><i style="width:70%"></i></div>
+      <p>Webapp di finanze familiari ancorata a una persona concreta (Sara &amp; Marco) e a una barriera precisa — l'onere dell'inserimento manuale — non a un "utente generico". Lo spazio è battuto, ma la mossa che chiude il loop (foto scontrino su Telegram → estrazione → auto-import senza click) attacca davvero quella barriera invece di aggiungere l'ennesima dashboard.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <div class="card-name">Robustness</div>
+        <div class="badge">72</div>
+      </div>
+      <div class="bar"><i style="width:72%"></i></div>
+      <p><code>tools/askclaude/askclaude.mjs</code> è il punto forte: tassonomia d'errore tipizzata (<code>usage|spawn|timeout|cli|parse</code>), timeout con <code>child.kill()</code>, repair retry, contratto "never throws" e persino lo swallow di EPIPE su stdin. La degradazione è progettata — <code>report-server</code> spento lascia la webapp sugli insight deterministici, e lo stub <code>ASKCLAUDE_CLAUDE_BIN</code> rende la demo riproducibile offline — ma <code>.claude/settings.json</code> annulla ogni guardrail (<code>Bash(*)</code>, <code>skipDangerousModePermissionPrompt: true</code>, <code>defaultMode: auto</code>) e <code>pending-expenses.json</code> viene riscritto senza write atomica.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <div class="card-name">Code Quality</div>
+        <div class="badge">78</div>
+      </div>
+      <div class="bar"><i style="width:78%"></i></div>
+      <p>Per un progetto da ~5h la copertura di test di <code>askclaude</code> è fuori scala: 14 file fra e2e, payload, build-args, extract-json, stub-bin e uno smoke live opt-in, su un wrapper zero-dipendenze di 325 righe. I commenti spiegano il <em>perché</em> non ovvio — la nota sul CLI che non applica <code>--json-schema</code> agli input vision, con il workaround prompt+repair+normalizzazione, è esattamente il tipo di vincolo nascosto che merita una riga; restano però file di stato committati (<code>pending-expenses.json</code>, <code>settings.local.json</code>, <code>__pycache__/*.pyc</code>).</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <div class="card-name">Tool Appropriateness</div>
+        <div class="badge">62</div>
+      </div>
+      <div class="bar"><i style="width:62%"></i></div>
+      <p>La scelta di tenere il core deterministico e client-side, mettendo l'LLM solo dove aggiunge valore reale (OCR scontrino, report in linguaggio naturale), è motivata in ADR-0002 e preserva la demo offline: giudizio maturo, resiste alla tentazione di LLM-izzare tutto. Il perimetro <code>.claude/</code> però è ridondante — una ventina di skill importate e inutilizzate qui (tdd, triage, wayfinder, to-tickets, resolving-merge-conflicts, setup-matt-pocock-skills…), il plugin <code>mattpocock-skills</code> abilitato <em>e</em> le stesse skill vendorizzate nel repo, con <code>ask-matt</code> che esiste come router sopra quello sprawl.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <div class="card-name">Token Efficiency</div>
+        <div class="badge">65</div>
+      </div>
+      <div class="bar"><i style="width:65%"></i></div>
+      <p>La regola anti-duplicazione è esplicita e ripetuta nei tre punti giusti: <code>CLAUDE.md</code> delega a skill/memory, l'indice memory vieta di duplicare ciò che è già in <code>CLAUDE.md</code> o nei <code>docs/</code>, e l'agent-def rimanda la rubrica alla skill. A pesare in negativo sono <code>CLAUDE_CODE_MAX_OUTPUT_TOKENS: 64000</code> e la superficie di discovery delle 20+ skill vendorizzate, con <code>accenture-brand/SKILL.md</code> a 6.6k caratteri più un albero <code>references/</code> e le <code>ui-*</code> che trasportano prose di installazione generiche (Figma/Penpot) estranee a questo flusso.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <div class="card-name">Documentation</div>
+        <div class="badge">85</div>
+      </div>
+      <div class="bar"><i style="width:85%"></i></div>
+      <p>Catena ADR con frontmatter <code>status</code>/<code>supersedes-in-part</code> e conseguenze scritte per esteso, README per componente (bot, report-server, askclaude) ciascuno con setup, percorso demo offline, tabella endpoint e variabili d'ambiente, più il contratto request/response di <code>askclaude</code> documentato con exit code e binding in tre linguaggi. Difetto concreto in una pratica per il resto rigorosa: due ADR portano lo stesso numero 0002.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="sec-title">GLOBAL ASSESSMENT</div>
+  <div class="global-card">
+    <p>Il progetto vale soprattutto per come gestisce il <em>contesto</em>, non per quanti agenti mette in campo. La memory versionata nel repo con convenzione dichiarata, la catena ADR che ammette e traccia i cambi di rotta, e un <code>CLAUDE.md</code> che si tiene corto delegando altrove sono le tre cose che più raramente si vedono fatte bene in un hackathon, e qui ci sono tutte e tre. Sul piano dell'esecuzione <code>askclaude</code> è un confine LLM progettato da ingegnere — envelope tipizzato, timeout, retry, test veri — e la decisione di lasciare il core deterministico, argomentata in ADR-0002 invece che subita, protegge la demo dal rischio di rete. Quello che tiene il voto lontano dall'alto è la diluizione: una ventina di skill importate e non usate qui gonfiano il perimetro <code>.claude/</code> senza che il progetto le sappia difendere una per una, ed è proprio il criterio che il team si era dato in <code>CLAUDE.md</code> ("il <code>.claude/</code> è valutato: minimale, ordinato, spiegabile"). Con quel perimetro potato all'essenziale e i permessi riportati sotto controllo, lo stesso lavoro starebbe sensibilmente più in alto.</p>
+  </div>
+</section>
+
+<footer>
+  <div>&#9654; Powered by Accenture Hackathon Evaluator</div>
+  <div>2026-09-22</div>
+</footer>
+
+</body>
+</html>

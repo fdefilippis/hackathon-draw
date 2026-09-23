@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — primi-segni</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; }
+  .brand .acn { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; }
+  .brand .tool { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.2em; }
+  .repo { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; word-break: break-all; }
+  .score-label { font-size: 0.75rem; letter-spacing: 0.3em; color: var(--text-muted); margin-bottom: 0.25rem; }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161,0,255,0.4);
+  }
+  .verdict { font-style: italic; color: var(--text-muted); max-width: 600px; margin-top: 1.25rem; line-height: 1.5; }
+  .hero-date { position: absolute; right: 4rem; bottom: 3rem; color: var(--text-muted); font-size: 0.8rem; }
+
+  /* ---------- Breakdown ---------- */
+  .section-title { font-size: 0.75rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 1.75rem; }
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); margin-top: 0.35rem; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .cell.muted { opacity: 0.4; filter: grayscale(1); }
+  .cell.muted .bar > span { background: #555; }
+
+  /* ---------- Criteria ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .card-name { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161,0,255,0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  article .bar { margin-top: 0.85rem; }
+  .comment { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+  article.muted { opacity: 0.45; filter: grayscale(1); }
+  article.muted:hover { border-color: var(--border); }
+  article.muted .card-name { color: #555; }
+  article.muted .badge { background: #1e1e1e; color: #555; border-color: #333; }
+  article.muted .bar > span { background: #444; }
+
+  /* ---------- Global ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 1000px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .score-big { font-size: 4.5rem; }
+    .hero-date { position: static; margin-top: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="acn">&#9654; ACCENTURE</span>
+    <span class="tool">HACKATHON EVALUATOR</span>
+  </div>
+  <div class="repo">https://github.com/sigpio/primi-segni</div>
+  <div class="score-label">OVERALL SCORE</div>
+  <div class="score-big">79<span style="font-size:2rem;font-weight:700;opacity:.5;">/100</span></div>
+  <p class="verdict">Pipeline agentica matura e disciplinata, penalizzata da fallback assenti e da una memoria disallineata.</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">SCORE BREAKDOWN</div>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">80</div>
+      <div class="bar"><span style="width:80%"></span></div>
+      <div class="cell-contrib">19.2 &middot; peso 24%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><span style="width:78%"></span></div>
+      <div class="cell-contrib">14.8 &middot; peso 19%</div>
+    </div>
+    <div class="cell muted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score" style="color:#666">88</div>
+      <div class="bar"><span style="width:88%"></span></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">70</div>
+      <div class="bar"><span style="width:70%"></span></div>
+      <div class="cell-contrib">10.5 &middot; peso 15%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">82</div>
+      <div class="bar"><span style="width:82%"></span></div>
+      <div class="cell-contrib">9.8 &middot; peso 12%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">83</div>
+      <div class="bar"><span style="width:83%"></span></div>
+      <div class="cell-contrib">9.1 &middot; peso 11%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">76</div>
+      <div class="bar"><span style="width:76%"></span></div>
+      <div class="cell-contrib">9.1 &middot; peso 12%</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">87</div>
+      <div class="bar"><span style="width:87%"></span></div>
+      <div class="cell-contrib">6.1 &middot; peso 7%</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">DETAILED ANALYSIS</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">80</span>
+      </div>
+      <div class="bar"><span style="width:80%"></span></div>
+      <p class="comment">La pipeline <code>/feature</code> orchestra planner&rarr;builder&rarr;pwa-verifier&rarr;reviewer con gate espliciti, e i quattro agenti in <code>.claude/agents/</code> hanno perimetri disgiunti con model tiering deliberato (opus per il giudizio, sonnet per l'esecuzione). Manca per&ograve; qualsiasi MCP, memoria persistente tra sessioni o stato intermedio esternalizzato: la catena &egrave; lineare e si esaurisce nel singolo thread.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">78</span>
+      </div>
+      <div class="bar"><span style="width:78%"></span></div>
+      <p class="comment">Istruzioni di ottimo livello: formati di output fissi a sei sezioni in <code>planner.md</code> e <code>builder.md</code>, gate di chiarimento con limite di 2-3 domande, e l'istruzione esplicita &laquo;non fidarti della memoria, ispeziona lo stato attuale&raquo;. Pesa per&ograve; una staleness reale in <code>CLAUDE.md</code>, che dichiara <code>better-sqlite3</code> mentre <code>apps/api/package.json</code> e il README usano <code>node:sqlite</code>.</p>
+    </article>
+
+    <article class="muted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">NON PESATO</span>
+      </div>
+      <div class="bar"><span style="width:88%"></span></div>
+      <p class="comment">Alunni NAI di prima elementare senza alfabetizzazione n&eacute; supporto a casa: problema reale, con profilo utente e metrica di miglioramento verificabile documentati in <code>doc/concept.md</code>. La scelta deliberata di NON usare LLM, motivata e imposta come vincolo architetturale controllato dal reviewer, &egrave; pi&ugrave; matura dell'uso decorativo dell'AI.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">70</span>
+      </div>
+      <div class="bar"><span style="width:70%"></span></div>
+      <p class="comment">Escalation umana intenzionale e ben posizionata: gate di fattibilit&agrave; in <code>/feature</code>, divieto di commit senza diff visto dall'utente, hook <code>format.sh</code> best-effort che esce sempre 0, e test in <code>engine.test.ts</code> che coprono i valori esatti di soglia. Manca per&ograve; ogni fallback nel caso un subagente fallisca o produca output malformato, e il loop &laquo;se rosso correggi e ripeti&raquo; non ha limite di iterazione.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">82</span>
+      </div>
+      <div class="bar"><span style="width:82%"></span></div>
+      <p class="comment">TypeScript strict con contratto condiviso in <code>packages/shared/src/index.ts</code>, validazione zod e 404 espliciti in <code>apps/api/src/server.ts</code>, rule engine composto da funzioni pure testate, CI con typecheck+test+build. I mapper <code>toExercise</code>/<code>toChild</code> eseguono cast non verificati su <code>Record&lt;string, unknown&gt;</code>, unico punto debole rilevante.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">83</span>
+      </div>
+      <div class="bar"><span style="width:83%"></span></div>
+      <p class="comment">Quattro agenti con tool ristretti alla sola lettura (Bash/Read/Grep/Glob), coerente con la scelta di far scrivere il codice solo al thread principale; slash command mappati su flussi realmente ricorrenti e hook usato correttamente per la formattazione. Lieve ridondanza tra <code>/verify</code>, che elenca i passi inline, e il subagente <code>pwa-verifier</code> che esegue la stessa procedura.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">76</span>
+      </div>
+      <div class="bar"><span style="width:76%"></span></div>
+      <p class="comment">Pattern corretto: <code>CLAUDE.md</code> volutamente corto che rimanda al concept con <code>@doc/concept.md</code>, subagenti istruiti a riportare &laquo;solo la conclusione, non i dump&raquo;, formati di output fissi e <code>/clear</code> documentato. Il blocco dei vincoli &egrave; per&ograve; ripetuto in quattro file e non c'&egrave; alcuna strategia di prompt caching sulle istruzioni stabili.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">87</span>
+      </div>
+      <div class="bar"><span style="width:87%"></span></div>
+      <p class="comment">README completo di architettura, prerequisiti Node 24, tabella degli script, percorsi della PWA e credenziali demo; <code>doc/concept.md</code> copre i deliverable dell'hackathon con la metrica di verifica esplicita. Il flusso agentico &egrave; documentato sia in <code>CLAUDE.md</code> sia nel frontmatter <code>description</code> di ogni agente e comando.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">GLOBAL ASSESSMENT</div>
+  <div class="global-card">
+    <p>Progetto tra i pi&ugrave; solidi sul piano agentico: la pipeline <code>/feature</code> non &egrave; una lista di buoni propositi ma una macchina a stati con gate, ruoli disgiunti e model tiering motivato. La scelta architetturale pi&ugrave; interessante &egrave; aver reso i quattro subagenti read-only, lasciando la scrittura al thread principale: il diff resta revisionabile e l'ingegnere non esce mai dal loop. Il vincolo &laquo;niente LLM/ML&raquo; &egrave; tenuto con disciplina e verificato attivamente dal reviewer, e il rule engine deterministico &mdash; l'unico componente critico &mdash; &egrave; coperto da test sui valori di soglia. I due limiti reali sono l'assenza di fallback quando un subagente fallisce e una staleness in <code>CLAUDE.md</code>, che indica una dipendenza (<code>better-sqlite3</code>) diversa da quella effettivamente usata (<code>node:sqlite</code>). Con un fallback esplicito sulla catena e l'allineamento del file di memoria, il punteggio salirebbe sensibilmente.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

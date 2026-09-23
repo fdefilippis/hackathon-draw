@@ -58,7 +58,7 @@ AUTH_HEADER=()
 gh_get() {
   # $1 = path API completo
   local url="$1" body http
-  body="$(curl -sS "${AUTH_HEADER[@]}" \
+  body="$(curl -sS ${AUTH_HEADER[@]+"${AUTH_HEADER[@]}"} \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -w $'\n%{http_code}' "$url")" || die "richiesta fallita: $url"
@@ -85,8 +85,10 @@ TREE_JSON="$(gh_get "$API/repos/$OWNER/$REPO/git/trees/$REF?recursive=1")"
 TRUNCATED="$(printf '%s' "$TREE_JSON" | jq -r '.truncated // false')"
 
 # Tutti i path di tipo blob (file)
-mapfile -t ALL_PATHS < <(printf '%s' "$TREE_JSON" \
-  | jq -r '.tree[] | select(.type=="blob") | .path')
+ALL_PATHS=()
+while IFS= read -r _line; do
+  ALL_PATHS+=("$_line")
+done < <(printf '%s' "$TREE_JSON" | jq -r '.tree[] | select(.type=="blob") | .path')
 
 TOTAL_FILES="${#ALL_PATHS[@]}"
 
@@ -99,6 +101,9 @@ priority_of() {
   case "$lower" in
     */node_modules/*|node_modules/*|*/.git/*|*/dist/*|*/build/*|*/vendor/*) echo -1; return;;
     *.png|*.jpg|*.jpeg|*.gif|*.svg|*.ico|*.pdf|*.zip|*.tar|*.gz|*.lock|*.min.js|*.map) echo -1; return;;
+    *.pptx|*.docx|*.xlsx|*.woff|*.woff2|*.ttf|*.mp4|*.mp3|*.wav) echo -1; return;;
+    *package-lock.json|*pnpm-lock.yaml|*poetry.lock|*composer.lock|*go.sum) echo -1; return;;
+    */__pycache__/*|*.pyc|*/.venv/*|*/venv/*|*/target/*|*/.next/*|*/coverage/*) echo -1; return;;
   esac
   case "$lower" in
     *readme*|*overview*)                                   echo 100;;
@@ -123,7 +128,10 @@ for p in "${ALL_PATHS[@]}"; do
   i=$((i + 1))
 done
 
-mapfile -t SORTED < <(printf '%s\n' "${SCORED[@]}" | sort | cut -f3-)
+SORTED=()
+while IFS= read -r _line; do
+  SORTED+=("$_line")
+done < <(printf '%s\n' "${SCORED[@]+"${SCORED[@]}"}" | sort | cut -f3-)
 
 # --- Output: header + tree -----------------------------------------------------
 printf '=== REPO: %s/%s (ref: %s) ===\n' "$OWNER" "$REPO" "$REF"
@@ -145,7 +153,7 @@ RAW_BASE="https://raw.githubusercontent.com/$OWNER/$REPO/$REF"
 count=0
 for p in "${SORTED[@]}"; do
   [ "$count" -ge "$MAX_FILES" ] && break
-  content="$(curl -sS "${AUTH_HEADER[@]}" "$RAW_BASE/$p" 2>/dev/null || true)"
+  content="$(curl -sS ${AUTH_HEADER[@]+"${AUTH_HEADER[@]}"} "$RAW_BASE/$p" 2>/dev/null || true)"
   [ -z "$content" ] && continue
   printf -- '----- FILE: %s -----\n' "$p"
   total_chars="$(printf '%s' "$content" | wc -c | tr -d ' ')"
