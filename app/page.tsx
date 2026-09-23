@@ -31,6 +31,8 @@ export default function Home() {
   const [pairs, setPairs] = useState<Pair[]>([]);
 
   // Ripristino dell'ultima estrazione salvata al caricamento.
+  // La home resta comunque il primo schermo: i risultati sono raggiungibili
+  // dal pulsante dedicato, senza rifare l'estrazione.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -43,7 +45,6 @@ export default function Home() {
         if (!cancelled && state && state.pairs.length > 0) {
           setNames(state.names);
           setPairs(state.pairs);
-          setStep("results");
         }
       } catch (err) {
         console.error("Ripristino stato fallito", err);
@@ -92,7 +93,13 @@ export default function Home() {
         <div className="flex flex-1 flex-col justify-center">
           <AnimatePresence mode="wait">
             {step === "intro" && (
-              <IntroScreen key="intro" onStart={() => setStep("input")} />
+              <IntroScreen
+                key="intro"
+                onStart={() => setStep("input")}
+                onShowResults={
+                  pairs.length > 0 ? () => setStep("results") : undefined
+                }
+              />
             )}
             {step === "input" && (
               <InputScreen

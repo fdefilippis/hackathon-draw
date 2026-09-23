@@ -3,7 +3,14 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-export default function IntroScreen({ onStart }: { onStart: () => void }) {
+export default function IntroScreen({
+  onStart,
+  onShowResults,
+}: {
+  onStart: () => void;
+  /** Presente solo se esiste un'estrazione già salvata. */
+  onShowResults?: () => void;
+}) {
   return (
     <motion.section
       key="intro"
@@ -43,7 +50,7 @@ export default function IntroScreen({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.45, duration: 0.7 }}
         className="mt-7 max-w-2xl text-balance text-lg text-white/65 sm:text-xl"
       >
-        40 menti. 20 squadre. Una sola notte per costruire qualcosa di
+        40 menti. 20 squadre. Cinque ore per costruire qualcosa di
         straordinario. Pronti a scoprire le squadre?
       </motion.p>
 
@@ -64,6 +71,14 @@ export default function IntroScreen({ onStart }: { onStart: () => void }) {
               {"→"}
             </span>
           </button>
+          {onShowResults && (
+            <button
+              onClick={onShowResults}
+              className="inline-flex items-center gap-2 rounded-full border border-accenture-purple/60 bg-accenture-purple/10 px-8 py-4 text-base font-medium text-white backdrop-blur transition hover:border-accenture-purple hover:bg-accenture-purple/20"
+            >
+              Vedi le squadre estratte
+            </button>
+          )}
           <Link
             href="/brief"
             className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-base font-medium text-white/80 backdrop-blur transition hover:border-accenture-purple/60 hover:text-white"
