@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — Corso-Claude</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 0.35rem;
+  }
+  .brand span {
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-left: 0.6rem;
+    letter-spacing: 0.22em;
+  }
+  .repo {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    word-break: break-all;
+  }
+  .score-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+  }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161, 0, 255, 0.4);
+  }
+  .score-big small { font-size: 2rem; font-weight: 700; color: var(--text-muted); }
+  .verdict {
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-top: 1.25rem;
+    line-height: 1.6;
+  }
+  .hero-date {
+    position: absolute;
+    right: 4rem;
+    bottom: 3rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Section shared ---------- */
+  .section-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+  }
+
+  /* ---------- Breakdown ---------- */
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; }
+  .bar > i { display: block; height: 100%; border-radius: 2px;
+             background: linear-gradient(90deg, #A100FF, #C84BFF); }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .muted-cell { opacity: 0.4; filter: grayscale(1); }
+  .muted-cell .bar > i { background: #555; }
+
+  /* ---------- Criteria ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .card-name {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+  }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161, 0, 255, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .card-bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 1rem; }
+  .card-bar > i { display: block; height: 100%; border-radius: 2px;
+                  background: linear-gradient(90deg, #A100FF, #C84BFF); }
+  .card-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+
+  article.unweighted { opacity: 0.45; filter: grayscale(1); }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge { background: #1e1e1e; color: #555; border-color: #333; font-size: 0.7rem; }
+  article.unweighted .card-bar > i { background: #444; }
+
+  /* ---------- Global ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 1100px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 760px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .grid-4, .grid-2 { grid-template-columns: 1fr; }
+    .score-big { font-size: 4.5rem; }
+    .hero-date { position: static; margin-top: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">▶ ACCENTURE <span>HACKATHON EVALUATOR</span></div>
+  <div class="repo">https://github.com/orasiu88/Corso-Claude</div>
+  <div class="score-label">OVERALL SCORE</div>
+  <div class="score-big">55<small>/100</small></div>
+  <p class="verdict">Istruzioni agente scritte con cura, ma contraddette dal codice consegnato</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">SCORE BREAKDOWN</div>
+  <div class="grid-4">
+    <div>
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">52</div>
+      <div class="bar"><i style="width:52%"></i></div>
+      <div class="cell-contrib">24% · 12.5</div>
+    </div>
+    <div>
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">58</div>
+      <div class="bar"><i style="width:58%"></i></div>
+      <div class="cell-contrib">19% · 11.0</div>
+    </div>
+    <div class="muted-cell">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score" style="color:#666">82</div>
+      <div class="bar"><i style="width:82%"></i></div>
+      <div class="cell-contrib">0% · 0 (non pesato)</div>
+    </div>
+    <div>
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">45</div>
+      <div class="bar"><i style="width:45%"></i></div>
+      <div class="cell-contrib">15% · 6.8</div>
+    </div>
+    <div>
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">60</div>
+      <div class="bar"><i style="width:60%"></i></div>
+      <div class="cell-contrib">12% · 7.2</div>
+    </div>
+    <div>
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">63</div>
+      <div class="bar"><i style="width:63%"></i></div>
+      <div class="cell-contrib">11% · 6.9</div>
+    </div>
+    <div>
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">58</div>
+      <div class="bar"><i style="width:58%"></i></div>
+      <div class="cell-contrib">12% · 7.0</div>
+    </div>
+    <div>
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">58</div>
+      <div class="bar"><i style="width:58%"></i></div>
+      <div class="cell-contrib">7% · 4.1</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">DETAILED ANALYSIS</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">52</span>
+      </div>
+      <div class="card-bar"><i style="width:52%"></i></div>
+      <p class="card-text">Quattro subagent dev-time con perimetri disgiunti (<code>agenti usati/design-agent.md</code>, <code>code-agent.md</code>, <code>accessibility-validator.md</code>, <code>test-agent.md</code>), ma senza orchestratore, handoff dichiarato o workflow multi-step con stato. A runtime il layer agentico si riduce a due prompt indipendenti one-shot in <code>App/src/services/agents/prompts.ts</code>, senza memoria persistente né log intermedi.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">58</span>
+      </div>
+      <div class="card-bar"><i style="width:58%"></i></div>
+      <p class="card-text">I singoli file agente sono scritti con cura notevole: scope esplicito, <code>description</code> per il routing, pattern vietati, checklist WCAG 2.1 AA completa e casi di test nominati (TC-01…TC-08). Penalità strutturale però, perché <code>App/CLAUDE.md</code> e <code>code-agent.md</code> impongono «single file <code>index.html</code>, no build step, no npm, solo <code>claude-sonnet-4-6</code>» mentre il repo consegnato è un'app React+Vite di circa 90 file che chiama Gemini.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">NON PESATO</span>
+      </div>
+      <div class="card-bar"><i style="width:82%"></i></div>
+      <p class="card-text">Problema reale e non artificioso: tradurre clausole contrattuali opache in linguaggio comprensibile a utenti con bassa alfabetizzazione finanziaria, con profilo utente target esplicitato in <code>accessibility-validator.md</code>. L'AI aggiunge valore genuino nell'estrazione strutturata di mora, penali di recesso e rinnovi automatici, non è un CRUD travestito.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">45</span>
+      </div>
+      <div class="card-bar"><i style="width:45%"></i></div>
+      <p class="card-text">Presente il ramo di errore sul parsing (<code>parseAgentJson</code> con catch e messaggio utente in italiano) e il controllo di <code>parsed.error</code> in <code>useDocumentAnalysis.ts</code>. Mancano però try/catch su <code>readPdfAsBase64</code> e <code>callAnthropicAgent</code>: un errore HTTP o di lettura file lascia lo stato bloccato su <code>loading</code> senza feedback, e non esistono retry, timeout/abort né fallback.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">60</span>
+      </div>
+      <div class="card-bar"><i style="width:60%"></i></div>
+      <p class="card-text">Buona stratificazione (services/hooks/store/components, atomic design, alias di path, prompt come costanti tipizzate) e <code>parseAgentJson.ts</code> gestisce correttamente le code fence dell'LLM. Grave disallineamento di naming: <code>anthropic.service.ts</code> esporta <code>callAnthropicAgent</code> con tipi <code>AnthropicContent</code> ma chiama <code>gemini-flash-lite-latest</code> su endpoint Google, e la chiave vive in un env var <code>VITE_</code> quindi finisce nel bundle client.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">63</span>
+      </div>
+      <div class="card-bar"><i style="width:63%"></i></div>
+      <p class="card-text">I quattro subagent sono la primitiva giusta per specialisti di revisione, con <code>description</code> mirate, <code>model</code> pinnato e nessuna sovrapposizione di perimetro. Scelta debole su <code>test-agent.md</code>, che esegue i test «ragionando staticamente» pur trovandosi in un repo con npm e vite dove un runner reale è disponibile; assenti hook per automatizzare lint e test.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">58</span>
+      </div>
+      <div class="card-bar"><i style="width:58%"></i></div>
+      <p class="card-text">Pattern corretto sui subagent caricati on-demand e <code>CLAUDE.md</code> breve che <em>referenzia</em> <code>design-system.html</code> invece di inlinearlo. Pesa però la duplicazione: <code>design-agent.md</code> reinlinea l'intera tabella di token già presente in <code>App/src/styles/tokens.css</code>, e i vincoli su modello, header e single-file sono ripetuti tra <code>CLAUDE.md</code> e <code>code-agent.md</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">58</span>
+      </div>
+      <div class="card-bar"><i style="width:58%"></i></div>
+      <p class="card-text">Copertura ampia: README esteso con problema e architettura, <code>PLAN.md</code>, <code>design-system.html</code> interattivo e deck di pitch. Il difetto è che documenta un'app che non è quella consegnata, con file map, architettura single-file e provider AI dichiarati che non corrispondono al codice presente.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">GLOBAL ASSESSMENT</div>
+  <div class="global-card">
+    <p>FinanceScope mostra un livello di scrittura delle istruzioni sopra la media: i quattro file agente sono precisi, con scope disgiunti, pattern vietati e casi di test nominati, e i prompt runtime impongono uno schema JSON rigoroso con gestione esplicita del caso vuoto. Il progetto però paga un disallineamento sistematico tra ciò che le istruzioni descrivono e ciò che il repo contiene: <code>CLAUDE.md</code> e <code>code-agent.md</code> governano un'app single-file senza build che non esiste più, e il servizio chiamato <code>anthropic.service.ts</code> parla in realtà con Gemini. Sul piano agentico la profondità resta limitata a specialisti paralleli senza orchestratore, handoff o stato condiviso, con un runtime fatto di due chiamate one-shot indipendenti. La robustezza è il punto più fragile in esercizio, perché gli errori più probabili — risposta HTTP non-ok e fallimento di lettura del PDF — non sono intercettati e lasciano la UI in caricamento permanente. Allineare le istruzioni al codice reale e chiudere i due rami di errore mancanti alzerebbe il punteggio in modo significativo a parità di funzionalità.</p>
+  </div>
+</section>
+
+<footer>
+  <span>▶ Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — marcomelilliaccenture/hackaton</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brandline { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+  .logo { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; }
+  .product { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.2em; }
+  .repo { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.75rem; }
+  .score-label { display: block; letter-spacing: 0.3em; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161,0,255,0.4);
+  }
+  .score-big span { font-size: 2.5rem; font-weight: 700; color: var(--text-muted); }
+  .verdict { font-style: italic; color: var(--text-muted); max-width: 600px; margin-top: 1.5rem; line-height: 1.6; }
+  .hero-date { position: absolute; right: 4rem; bottom: 3rem; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.1em; }
+
+  /* ---------- Section titles ---------- */
+  .section-title { letter-spacing: 0.2em; font-size: 0.75rem; color: var(--accent); margin-bottom: 1.75rem; font-weight: 700; }
+
+  /* ---------- Breakdown ---------- */
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); margin-top: 0.35rem; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .cell.unweighted { opacity: 0.4; filter: grayscale(1); }
+  .cell.unweighted .bar > i { background: #555; }
+
+  /* ---------- Criteria ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .card-name { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161,0,255,0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .card-comment { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+  .card-comment code { background: var(--surface-2); padding: 0.05rem 0.3rem; border-radius: 3px; font-size: 0.85em; }
+  article.unweighted { opacity: 0.45; filter: grayscale(1); }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge { background: #1e1e1e; color: #555; border-color: #333; font-size: 0.7rem; letter-spacing: 0.1em; }
+  article.unweighted .bar > i { background: #444; }
+
+  /* ---------- Global ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 1000px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .hero-date { position: static; display: block; margin-top: 1.5rem; }
+    .score-big { font-size: 4.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brandline">
+    <span class="logo">&#9654; ACCENTURE</span>
+    <span class="product">HACKATHON EVALUATOR</span>
+  </div>
+  <div class="repo">https://github.com/marcomelilliaccenture/hackaton</div>
+  <span class="score-label">OVERALL SCORE</span>
+  <div class="score-big">85<span>/100</span></div>
+  <p class="verdict">Orchestrazione matura e disciplina sui token esemplare; robustezza del loop e portabilità degli hook restano i punti deboli.</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <h2 class="section-title">SCORE BREAKDOWN</h2>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">88</div>
+      <div class="bar"><i style="width:88%"></i></div>
+      <div class="cell-contrib">24% &middot; 21.1</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">90</div>
+      <div class="bar"><i style="width:90%"></i></div>
+      <div class="cell-contrib">19% &middot; 17.1</div>
+    </div>
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">88</div>
+      <div class="bar"><i style="width:88%"></i></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><i style="width:78%"></i></div>
+      <div class="cell-contrib">15% &middot; 11.7</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><i style="width:78%"></i></div>
+      <div class="cell-contrib">12% &middot; 9.4</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">85</div>
+      <div class="bar"><i style="width:85%"></i></div>
+      <div class="cell-contrib">11% &middot; 9.4</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">92</div>
+      <div class="bar"><i style="width:92%"></i></div>
+      <div class="cell-contrib">12% &middot; 11.0</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">82</div>
+      <div class="bar"><i style="width:82%"></i></div>
+      <div class="cell-contrib">7% &middot; 5.7</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <h2 class="section-title">DETAILED ANALYSIS</h2>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">88</span>
+      </div>
+      <div class="bar"><i style="width:88%"></i></div>
+      <p class="card-comment">Sette agenti con confini di scrittura disgiunti tabulati in <code>build-workflow.md</code> &sect;1, model tiering deliberato (opus per <code>orchestrator</code>, <code>slice-planner</code> e <code>clarity-guard</code>; sonnet per i verificatori), tre gate e i sync point S1&ndash;S3. Stato esternalizzato in un solo file mutabile (<code>docs/specs/status.md</code>, aggiornato a una riga per volta con <code>Edit</code>), spec chiusi come contratti e regola anti-propagazione &laquo;non riassumere il lavoro di un agente per un altro&raquo;: 12-Factor applicato, non citato.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">90</span>
+      </div>
+      <div class="bar"><i style="width:90%"></i></div>
+      <p class="card-comment">Ogni agente dichiara cosa fa, cosa <strong>rifiuta</strong> e in quali path pu&ograve; scrivere; l'orchestratore aggiunge nove regole numerate sui token e un return contract con esempio concreto (~15 righe, codice vietato). Sovrapposizioni solo lievi &mdash; la tabella agenti ripete le frontmatter ma funge da indice; l'unica ambiguit&agrave; vera &egrave; il caveat &laquo;se l'harness non concede <code>Task</code>&raquo; in <code>orchestrator.md</code>, che lascia indefinito chi esegue davvero il ciclo.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">NON PESATO</span>
+      </div>
+      <div class="bar"><i style="width:88%"></i></div>
+      <p class="card-comment">Problema reale e verificabile: guidare chi deve presentare il kit postale per il permesso di soggiorno, con persona esplicita (<code>docs/persona.md</code>) e ogni valore normativo tracciato alla fonte in <code>docs/sources.md</code>. Il rifiuto esplicito di dare consigli &mdash; &laquo;lo strumento spiega una procedura, non dice cosa conviene fare&raquo; in <code>clarity-guard.md</code> &mdash; &egrave; la scelta che lo distingue da un chatbot generico.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">78</span>
+      </div>
+      <div class="bar"><i style="width:78%"></i></div>
+      <p class="card-comment">Gate reali che hanno fermato cose reali: il registro documenta la casella 77 scambiata per la 76, errore che avrebbe fatto ricopiare il numero sbagliato allo sportello; pi&ugrave; un <code>PreToolUse</code> che nega la scrittura del brief e un <code>PostToolUse</code> con timeout a 120s, <code>TimeoutExpired</code> gestito e no-op prima dello scaffold. Manca per&ograve; un limite esplicito di iterazione sul rimbalzo spec&harr;agente a gate rosso, e il fallback per un report malformato si ferma a &laquo;chiedi il formato&raquo;.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">78</span>
+      </div>
+      <div class="bar"><i style="width:78%"></i></div>
+      <p class="card-comment">Dominio in funzioni pure con <code>today</code> e festivit&agrave; iniettati, tracciabilit&agrave; R-01/R-02 alle fonti nei commenti, limiti dichiarati (festivit&agrave; patronali non gestite) e 68 test che asseriscono su codici e non su stringhe utente. Difetti concreti in <code>agents/hooks/run_tests.py</code>: <code>subprocess.run([...], shell=True)</code> su POSIX esegue il solo <code>npm</code> ignorando gli argomenti, il launcher <code>py</code> in <code>settings.json</code> &egrave; Windows-only e i path <code>.claude/hooks/</code> non combaciano con la posizione reale <code>agents/hooks/</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">85</span>
+      </div>
+      <div class="bar"><i style="width:85%"></i></div>
+      <p class="card-comment">Frontmatter <code>tools:</code> scoped per ruolo &mdash; <code>orchestrator</code> ha <code>Task</code> ma non <code>Bash</code>, <code>clarity-guard</code> non ha <code>Bash</code>, i verificatori s&igrave; &mdash; e Playwright confinato in <code>e2e/</code> con <code>package.json</code> separato, scelta motivata per non rallentare il gate 1. <code>PowerShell</code> affiancato a <code>Bash</code> in pi&ugrave; agenti &egrave; poco portabile, e <code>frontend-design</code>/<code>skill-creator</code> sono skill di terze parti vendorizzate pi&ugrave; che progettate per questo dominio.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">92</span>
+      </div>
+      <div class="bar"><i style="width:92%"></i></div>
+      <p class="card-comment">Strategia esplicita e coerente: nove regole numerate in <code>orchestrator.md</code> &mdash; passa path e numeri non contenuto, nessun agente apre il dossier da 45&nbsp;KB, l'orchestratore non legge mai <code>app/src/**</code> ma usa <code>Glob</code> per i soli nomi &mdash; return contract a ~15 righe con divieto di restituire codice, e stato ridotto a una riga di <code>status.md</code>. Non &egrave; dichiarato nulla sul prompt caching e le skill vendorizzate restano voluminose, ma sono caricate on-demand e <code>slide-index.md</code>/<code>slide-selection.md</code> mostrano retrieval selettivo.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">82</span>
+      </div>
+      <div class="bar"><i style="width:82%"></i></div>
+      <p class="card-comment">Metodologia documentata in modo esemplare: <code>build-workflow.md</code> con ruoli, confini e gate; <code>status.md</code> come registro con gli orari; <code>decision-log.md</code> e <code>ai-contributions.md</code>, che dichiara cosa &egrave; simulato e dove serve revisione umana. Manca per&ograve; un README di root &mdash; chi clona non trova un punto d'ingresso unico per avviare l'app, e i comandi (<code>cd app &amp;&amp; npm test</code>, <code>cd e2e &amp;&amp; npm test</code>) sono sparsi nei file degli agenti.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <h2 class="section-title">GLOBAL ASSESSMENT</h2>
+  <div class="global-card">
+    <p>Il progetto tratta il <em>come &egrave; stato costruito</em> come deliverable valutabile, e lo dimostra con artefatti verificabili invece che con dichiarazioni: sette agenti che rifiutano esplicitamente qualcosa, confini di scrittura disgiunti, tre gate e un registro con gli orari in cui ciascuno ha bloccato il lavoro. La disciplina sui token &egrave; la pi&ugrave; rigorosa del lotto &mdash; nove regole operative che vietano di propagare contenuto fra agenti e riducono lo stato a una riga &mdash; e la separazione <code>test-author</code>/<code>builder</code> (D-09) &egrave; una scelta architetturale con motivazione scritta, non un vezzo: quando lo stesso agente scrive test e implementazione, il test smette di essere una prova. La catena per&ograve; non ha girato per intero: B8 &egrave; passato a &laquo;verifica manuale dell'utente&raquo; e <code>journey-verifier</code> resta da eseguire, mentre <code>orchestrator.md</code> ammette di poter degradare a playbook se l'harness non concede <code>Task</code>. Sul codice applicativo i tre difetti negli hook sono il genere di cosa che si scopre solo su una macchina diversa da quella di sviluppo. Con un README di root e un limite esplicito sul rimbalzo a gate rosso, questo sarebbe un riferimento.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

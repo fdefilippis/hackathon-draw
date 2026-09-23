@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — claude-ai-hackaton</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+  }
+  .brand .acn { color: var(--accent); }
+  .brand .tool { color: var(--text-muted); font-weight: 500; }
+  .repo {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    word-break: break-all;
+  }
+  .score-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+  }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161, 0, 255, 0.4);
+  }
+  .score-big span { font-size: 2.5rem; font-weight: 700; color: var(--text-muted); }
+  .verdict {
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-top: 1.5rem;
+    line-height: 1.6;
+    font-size: 1.05rem;
+  }
+  .hero-date {
+    position: absolute;
+    right: 4rem;
+    bottom: 3rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Section shared ---------- */
+  .section-title {
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+  }
+
+  /* ---------- Breakdown ---------- */
+  .breakdown {
+    padding: 2.5rem 4rem;
+    background: var(--surface);
+  }
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .cell-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .bar {
+    height: 3px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #A100FF, #C84BFF);
+    border-radius: 2px;
+  }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .cell.unweighted { opacity: 0.4; filter: grayscale(1); }
+  .cell.unweighted .bar-fill { background: #555; }
+  .cell.unweighted .cell-score { color: #666; }
+
+  /* ---------- Criteria ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .card-name {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+  }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161, 0, 255, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .card-bar { margin-top: 0.9rem; }
+  .card-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+  article.unweighted {
+    opacity: 0.45;
+    filter: grayscale(1);
+  }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge {
+    background: #1e1e1e;
+    color: #555;
+    border-color: #333;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+  }
+  article.unweighted .bar-fill { background: #444; }
+
+  /* ---------- Global ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  footer .mark { color: var(--accent); }
+
+  @media (max-width: 1100px) {
+    .breakdown-grid { grid-template-columns: repeat(2, 1fr); }
+    .criteria-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .hero-date { right: 1.5rem; bottom: 1.5rem; }
+    .score-big { font-size: 4.5rem; }
+    .breakdown-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="acn">&#9654; ACCENTURE</span>
+    <span class="tool">HACKATHON EVALUATOR</span>
+  </div>
+  <div class="repo">https://github.com/alessandrogregoriniacn-tech/claude-ai-hackaton</div>
+  <div class="score-label">OVERALL SCORE</div>
+  <div class="score-big">79<span>/100</span></div>
+  <p class="verdict">Ingegneria solida e verificabile, gate dichiarati ma non imposti</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">SCORE BREAKDOWN</div>
+  <div class="breakdown-grid">
+
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">79</div>
+      <div class="bar"><div class="bar-fill" style="width:79%"></div></div>
+      <div class="cell-contrib">24% &middot; 19.0</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">82</div>
+      <div class="bar"><div class="bar-fill" style="width:82%"></div></div>
+      <div class="cell-contrib">19% &middot; 15.6</div>
+    </div>
+
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">76</div>
+      <div class="bar"><div class="bar-fill" style="width:76%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">80</div>
+      <div class="bar"><div class="bar-fill" style="width:80%"></div></div>
+      <div class="cell-contrib">15% &middot; 12.0</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">85</div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <div class="cell-contrib">12% &middot; 10.2</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">76</div>
+      <div class="bar"><div class="bar-fill" style="width:76%"></div></div>
+      <div class="cell-contrib">11% &middot; 8.4</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">64</div>
+      <div class="bar"><div class="bar-fill" style="width:64%"></div></div>
+      <div class="cell-contrib">12% &middot; 7.7</div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">86</div>
+      <div class="bar"><div class="bar-fill" style="width:86%"></div></div>
+      <div class="cell-contrib">7% &middot; 6.0</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">DETAILED ANALYSIS</div>
+  <div class="criteria-grid">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">79</span>
+      </div>
+      <div class="bar card-bar"><div class="bar-fill" style="width:79%"></div></div>
+      <p class="card-text">Sei subagent con perimetri disgiunti e handoff dichiarati (<code>content-editor</code> &rarr; <code>ui-guardian</code>/<code>accessibility-auditor</code> prima del push; <code>figma-sync</code> READ &rarr; <code>ui-guardian</code>; la skill <code>test-coverage</code> delega i test finanziari a <code>finance-engine</code>), pi&ugrave; due skill on-demand e MCP Figma. La separazione writer/reviewer &egrave; imposta a livello di capability nel frontmatter &mdash; <code>ui-guardian.md</code> non dichiara <code>Edit</code>/<code>Write</code> e quindi non <em>pu&ograve;</em> scrivere &mdash; ma nessun hook rende davvero obbligatori i gate marcati "OBBLIGATORIO", che restano affidati alla memoria del modello.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">82</span>
+      </div>
+      <div class="bar card-bar"><div class="bar-fill" style="width:82%"></div></div>
+      <p class="card-text">Ogni agente dichiara ambito in/out esplicito ("Restano fuori ambito: <code>lib/finance.ts</code> &rarr; <code>finance-engine</code>" in <code>content-editor.md</code>), trigger d'esempio nella <code>description</code> e output strutturato (blocco <code>DECISION NEEDED</code> con opzioni e raccomandazione); le skill hanno procedure numerate con stop espliciti ("NON tentare <code>firebase login</code> in autonomia"). Il vincolo bloccante del tema &egrave; per&ograve; ribadito in <code>CLAUDE.md</code>, <code>content-editor.md</code>, <code>finance-engine.md</code> e nelle schede <code>agents/**/README.md</code>: enfasi voluta su una regola non negoziabile, ma resta duplicazione su quattro livelli.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">NON PESATO</span>
+      </div>
+      <div class="bar card-bar"><div class="bar-fill" style="width:76%"></div></div>
+      <p class="card-text">Simulatore retrospettivo del costo-opportunit&agrave; con dataset storici reali e documentati (Banca d'Italia cubo <code>BOT0100</code>, Damodaran, MSCI World), inquadrato sul tema Inclusione Finanziaria. L'idea di base &mdash; calcolo di interesse composto &mdash; &egrave; comune; a distinguerla sono il framing retrospettivo e il divieto assoluto di consigli di investimento, tenuto con coerenza in tutto il progetto.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">80</span>
+      </div>
+      <div class="bar card-bar"><div class="bar-fill" style="width:80%"></div></div>
+      <p class="card-text">La checklist di <code>finance-engine.md</code> &egrave; tradotta in test eseguibili: <code>finance.test.ts</code> copre date invertite, importi negativi, <code>MAX_SAFE_INTEGER</code>, strumento/periodicit&agrave; sconosciuti e un fuzz test su &ge;200 combinazioni che verifica assenza di throw/NaN/Infinity, con avvisi tipizzati (<code>SimulationWarningCode</code>) che impediscono clamp silenziosi. L'escalation umana &egrave; intenzionale e ben posizionata (report-prima-di-fixare, blocco del push con tre opzioni, <code>BLOCKED</code> con fallback documentato in <code>figma-sync.md</code>), ma senza hook nessuno di questi gate &egrave; realmente vincolante e nessun agente dichiara limiti di iterazione.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">85</span>
+      </div>
+      <div class="bar card-bar"><div class="bar-fill" style="width:85%"></div></div>
+      <p class="card-text"><code>finance.ts</code> espone funzioni pure con codici di avviso tipizzati, <code>dateMath.ts</code> documenta l'interpolazione geometrica e il contratto esplicito ("richiede una data gi&agrave; clampata: il clamp &egrave; responsabilit&agrave; di chi chiama"), <code>validation.ts</code> motiva perch&eacute; il throw a module-load non &egrave; raggiungibile da input utente. Copertura di test su <code>finance</code>/<code>format</code>/<code>storage</code>/<code>theme</code>/<code>faqSearch</code>/<code>dateMath</code>/<code>validation</code> e script di generazione che valida i CSV prima di emettere il dataset; unico neo, l'artefatto <code>.firebase/hosting.b3V0.cache</code> committato.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">76</span>
+      </div>
+      <div class="bar card-bar"><div class="bar-fill" style="width:76%"></div></div>
+      <p class="card-text">Il campo <code>tools</code> &egrave; usato come confine di capability reale (reviewer senza <code>Edit</code>/<code>Write</code>, <code>finance-engine</code> con), le skill coprono le due procedure ripetibili (deploy, coverage) invece di diventare agenti, e l'MCP &egrave; usato solo dove serve davvero (Figma). Penalizza il livello <code>agents/**/README.md</code>: sette file che riespongono in prosa quanto gi&agrave; in <code>.claude/agents/</code>, mitigati dal link alla fonte di verit&agrave; ma pur sempre ridondanti.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">64</span>
+      </div>
+      <div class="bar card-bar"><div class="bar-fill" style="width:64%"></div></div>
+      <p class="card-text">Il dettaglio pesante vive nei singoli file agente, caricati solo quando quell'agente gira &mdash; selettivit&agrave; reale &mdash; e non ci sono <code>alwaysApply</code> proliferanti. Pesano per&ograve; il <code>CLAUDE.md</code> monolitico senza <code>@import</code>, la ripetizione del vincolo di tema su quattro file, il livello duplicato <code>agents/**/README.md</code> e l'assenza di qualsiasi strategia di prompt caching sulle istruzioni stabili.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">86</span>
+      </div>
+      <div class="bar card-bar"><div class="bar-fill" style="width:86%"></div></div>
+      <p class="card-text"><code>lib/data/raw/README.md</code> documenta per ogni fonte copertura, cadenza, provenienza e limiti noti (i buchi nelle aste BOT per singola scadenza sono dati mancanti legittimi, non errori di parsing) e <code>DESIGN_SYSTEM.md</code> riporta i rapporti di contrasto misurati per token su light e dark. Ogni agente ha la sua scheda con ruolo, ambito e trigger di invocazione; resta placeholder solo <code>presentation/README.md</code> ("i contenuti verranno aggiunti man mano").</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">GLOBAL ASSESSMENT</div>
+  <div class="global-card">
+    <p>Progetto tra i pi&ugrave; maturi del lotto sul piano dell'ingegneria: la catena vincolo &rarr; istruzione &rarr; test &egrave; chiusa e verificabile, con la checklist di <code>finance-engine.md</code> che diventa letteralmente <code>finance.test.ts</code>, fuzz test incluso. La separazione writer/reviewer imposta via <code>tools</code> nel frontmatter &egrave; la scelta architetturale migliore del repo, perch&eacute; sposta una regola da prosa a capability. Il limite principale &egrave; che tutto ci&ograve; che &egrave; dichiarato "OBBLIGATORIO" &mdash; <code>code-reviewer</code> prima di ogni push, <code>ui-guardian</code> su ogni modifica visiva &mdash; non ha alcun supporto deterministico: basterebbero hook <code>PreToolUse</code> in un <code>settings.json</code> che qui non esiste. Sul fronte token, il doppio livello di documentazione degli agenti (<code>.claude/agents/</code> pi&ugrave; <code>agents/**/README.md</code>) e la ripetizione del vincolo di tema su quattro file costano contesto senza aggiungere informazione. Con hook e un <code>CLAUDE.md</code> composto via <code>@import</code> questo repo salirebbe stabilmente sopra 85.</p>
+  </div>
+</section>
+
+<footer>
+  <span><span class="mark">&#9654;</span> Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

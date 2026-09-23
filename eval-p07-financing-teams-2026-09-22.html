@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — hackathon_2209_financing_teams</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ───────────────────────────────────────── */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand { font-size: 0.8rem; color: var(--accent); font-weight: 700; letter-spacing: 0.05em; }
+  .brand span { color: var(--text-muted); font-weight: 500; margin-left: 0.75rem; letter-spacing: 0.2em; }
+  .repo { font-size: 1.1rem; color: var(--text-muted); margin-top: 1.75rem; }
+  .score-label { letter-spacing: 0.3em; font-size: 0.75rem; color: var(--text-muted); margin-top: 1.5rem; }
+  .score {
+    font-size: 7rem; font-weight: 900; color: var(--accent);
+    line-height: 1; text-shadow: 0 0 60px rgba(161,0,255,0.4);
+  }
+  .score small { font-size: 2rem; font-weight: 700; color: var(--text-muted); }
+  .verdict { font-style: italic; color: var(--text-muted); max-width: 600px; margin-top: 1.25rem; line-height: 1.6; }
+  .date-abs { position: absolute; bottom: 3rem; right: 4rem; font-size: 0.8rem; color: var(--text-muted); }
+
+  /* ── Sections ───────────────────────────────────── */
+  .section-title { letter-spacing: 0.2em; font-size: 0.75rem; color: var(--accent); font-weight: 700; margin-bottom: 1.75rem; }
+
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); margin-top: 0.35rem; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .cell.unweighted { opacity: 0.4; filter: grayscale(1); }
+  .cell.unweighted .bar-fill { background: #555; }
+
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem; transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .card-name { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+  .badge {
+    background: var(--accent-glow); color: var(--accent-light);
+    border: 1px solid rgba(161,0,255,0.3); border-radius: 999px;
+    padding: 0.2rem 0.75rem; font-size: 0.85rem; font-weight: 700; white-space: nowrap;
+  }
+  article .bar { margin-top: 0.85rem; }
+  .comment { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+  article.unweighted { opacity: 0.45; filter: grayscale(1); }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge { background: #1e1e1e; color: #555; border-color: #333; }
+  article.unweighted .bar-fill { background: #444; }
+
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface); border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 1.5rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem; color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">▶ ACCENTURE<span>HACKATHON EVALUATOR</span></div>
+  <div class="repo">github.com/sofiaiacopinelli/hackathon_2209_financing_teams</div>
+  <div class="score-label">OVERALL SCORE</div>
+  <div class="score">68<small>/100</small></div>
+  <p class="verdict">Separazione skill deterministiche / layer LLM esemplare, ma l'orchestrazione resta dispatch single-shot</p>
+  <div class="date-abs">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">SCORE BREAKDOWN</div>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">62</div>
+      <div class="bar"><div class="bar-fill" style="width:62%"></div></div>
+      <div class="cell-contrib">24% · 14.9</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">74</div>
+      <div class="bar"><div class="bar-fill" style="width:74%"></div></div>
+      <div class="cell-contrib">19% · 14.1</div>
+    </div>
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">64</div>
+      <div class="bar"><div class="bar-fill" style="width:64%"></div></div>
+      <div class="cell-contrib">15% · 9.6</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">72</div>
+      <div class="bar"><div class="bar-fill" style="width:72%"></div></div>
+      <div class="cell-contrib">12% · 8.6</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">70</div>
+      <div class="bar"><div class="bar-fill" style="width:70%"></div></div>
+      <div class="cell-contrib">11% · 7.7</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">68</div>
+      <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+      <div class="cell-contrib">12% · 8.2</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">76</div>
+      <div class="bar"><div class="bar-fill" style="width:76%"></div></div>
+      <div class="cell-contrib">7% · 5.3</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">DETAILED ANALYSIS</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head"><span class="card-name">Agentic Depth</span><span class="badge">62</span></div>
+      <div class="bar"><div class="bar-fill" style="width:62%"></div></div>
+      <p class="comment">Sette agenti registrati in <code>agents/orchestrator.js</code> con <code>dispatch()</code> a doppia modalità (routing deterministico + <code>autoRoute</code> via Claude con validazione e fallback), affiancati da un registry di sei skill pure in <code>app/server/skills/index.js</code> che calcolano i numeri prima che il modello li narri. Manca però qualsiasi multi-step: nessun handoff fra agenti, nessuno stato fra chiamate, nessuna memoria persistente, nessun MCP — ogni agente è un prompt-builder single-shot e l'unico vero subagente Claude Code è <code>agents/prompts/test-generator.md</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Instruction Quality</span><span class="badge">74</span></div>
+      <div class="bar"><div class="bar-fill" style="width:74%"></div></div>
+      <p class="comment"><code>CLAUDE.md</code> rimanda a <code>agents/prompts/CODEBASE.md</code> come prima lettura e i template in <code>agents/prompts/</code> sono rigorosi: regole numerate obbligatorie, range contestuali concreti e formato di output esplicito (<code>expense-suggester.md</code> chiude con lo schema JSON su una riga, "nessun markdown"), più <code>LEVEL_STYLE</code> che vincola il registro con liste di termini ammessi e vietati per livello. Penalizzato perché <code>TASKS.md</code> è obsoleto — cita <code>app/js/app.js</code> e <code>agents/financial_agent.py</code> che non esistono più — e perché l'inventario dei moduli è duplicato fra <code>CLAUDE.md</code> e <code>CODEBASE.md</code>.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head"><span class="card-name">Idea Quality</span><span class="badge">NON PESATO</span></div>
+      <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+      <p class="comment">Alfabetizzazione finanziaria e affordability mutuo per utenti italiani: problema reale, con l'adattamento del registro per livello (principiante/intermedio/esperto) come valore aggiunto genuino dell'AI. L'integrazione dei tassi BCE live via SDMX in <code>app/js/market-data.js</code> aggiunge concretezza rispetto al tipico progetto template.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Robustness</span><span class="badge">64</span></div>
+      <div class="bar"><div class="bar-fill" style="width:64%"></div></div>
+      <p class="comment">Guardrail reali sull'output del modello: <code>validateExpenses</code> in <code>expense-suggester.js</code> clampa i negativi, ripristina i valori inseriti dall'utente come verità assoluta e riscala proporzionalmente se il totale supera il 90% del reddito; <code>autoRoute</code> valida il nome dell'agente contro la mappa e fa fallback su <code>analyze</code> sia su risposta invalida sia su eccezione; <code>market-data.js</code> usa <code>Promise.allSettled</code> con default hardcoded e badge "Dati stimati" visibile. Manca però qualsiasi timeout su <code>callClaude</code> — se <code>claude --print</code> si blocca la richiesta resta appesa per sempre — non c'è retry, e <code>mortgage-comparator.js</code> invoca <code>compare_mortgage_offer</code>, skill mai registrata in <code>skills/index.js</code>, con conseguente TypeError su <code>cmp.comparisons</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Code Quality</span><span class="badge">72</span></div>
+      <div class="bar"><div class="bar-fill" style="width:72%"></div></div>
+      <p class="comment">JSDoc coerente su ogni modulo, matematica finanziaria corretta con guardia <code>r === 0</code> (ammortamento alla francese e sua inversa in <code>skills/mortgage.js</code>), 115 test <code>node:test</code> verdi documentati in <code>tests/REPORT.md</code> con tanto di moduli esclusi e motivazione, e dipendenza circolare <code>navigation↔quiz</code> risolta deliberatamente via callback e documentata. Pesano la skill <code>compare_mortgage_offer</code> non registrata, <code>@anthropic-ai/sdk</code> e <code>dotenv</code> dichiarati in <code>app/server/package.json</code> ma mai usati (il transport è il subprocess <code>claude --print</code>), e <code>__dirname</code> calcolato e inutilizzato in tre file agente.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Tool Appropriateness</span><span class="badge">70</span></div>
+      <div class="bar"><div class="bar-fill" style="width:70%"></div></div>
+      <p class="comment">La scelta di tenere il calcolo finanziario in skill JS pure e lasciare al modello solo la prosa è la decisione architetturale migliore del repo, e <code>claude --print</code> come transport senza API key è pragmatico e motivato esplicitamente nel README. Sottrae punti la ridondanza fra <code>mortgage-advisor</code>, <code>mortgage-comparator</code> e <code>mortgage-coach</code> — tre agenti mutuo con input e framing largamente sovrapposti — e il router LLM <code>autoRoute</code>, che costa una chiamata Claude intera ma non viene mai esercitato perché <code>app/js/ai.js</code> chiama sempre gli endpoint deterministici.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Token Efficiency</span><span class="badge">68</span></div>
+      <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+      <p class="comment">Buone pratiche diffuse: template esterni caricati uno alla volta da <code>loadPrompt</code>, cap espliciti sull'output in ogni prompt ("max 280 parole", "max 2 frasi"), anti-preambolo sul JSON, troncamento del payload di routing a 800 char, sezioni opzionali costruite come stringa vuota quando non pertinenti e <code>ALREADY_SHOWN</code> in <code>tip-explainer</code> per non ripetere concetti già mostrati. Nessuna strategia di caching però — <code>LEVEL_STYLE</code> e l'intero template vengono rispediti inline a ogni chiamata, limite intrinseco del transport scelto — e l'istruzione "leggi prima CODEBASE.md" carica una seconda copia dell'inventario moduli già presente in <code>CLAUDE.md</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Documentation</span><span class="badge">76</span></div>
+      <div class="bar"><div class="bar-fill" style="width:76%"></div></div>
+      <p class="comment">README con avvio in due comandi, prerequisiti e albero annotato file per file; <code>CLAUDE.md</code> con i diagrammi di architettura frontend e server incluse le sette route; <code>CODEBASE.md</code> con tabella modulo → responsabilità → export reali e guida "dove metto X?"; <code>tests/REPORT.md</code> che dichiara anche cosa non è testato e perché. Il difetto serio è la contraddizione sull'avvio: <code>TASKS.md</code> indica <code>python3 -m http.server 8080</code> e <code>.claude/launch.json</code> lancia un http.server Python sulla 8081, mentre il server vero è Express sulla 3000.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">GLOBAL ASSESSMENT</div>
+  <div class="global-card">
+    <p>Il progetto centra la decisione architetturale che più conta in un'app finanziaria assistita da AI: i numeri li calcola codice deterministico e testato, il modello si limita a spiegarli, con i template di prompt esterni e un <code>LEVEL_STYLE</code> che adatta il registro in modo verificabile. Il layer di validazione dell'output — <code>validateExpenses</code> che riafferma i valori utente come verità e il fallback di <code>autoRoute</code> — dimostra che gli autori hanno pensato a cosa succede quando il modello sbaglia, cosa rara a questo livello. Il limite è che l'impianto resta un dispatcher di prompt: nessun handoff fra agenti, nessuno stato condiviso, nessuna memoria, e il router LLM costruito con cura non viene mai realmente usato dal frontend. A questo si somma un debito concreto — la skill <code>compare_mortgage_offer</code> mai registrata rende <code>mortgage-comparator</code> non funzionante, e tre file contraddicono il README sulle istruzioni di avvio. Con un timeout su <code>callClaude</code> e la registrazione della skill mancante il progetto guadagnerebbe subito diversi punti in robustezza.</p>
+  </div>
+</section>
+
+<footer>
+  <span>▶ Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

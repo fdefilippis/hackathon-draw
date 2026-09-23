@@ -120,12 +120,29 @@ export default function Home() {
           </AnimatePresence>
         </div>
 
-        <footer className="mt-6 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-white/25">
-          <span>Hagenthon</span>
-          <span className="text-accenture-purple">{">"}</span>
-          <span>Accenture Application Engineering</span>
-          <span className="text-accenture-purple">{">"}</span>
-          <a href="/admin" className="hover:text-white/50 transition-colors">Admin</a>
+        <footer className="mt-6 flex flex-col items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-white/25">
+          <nav className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            {[
+              { href: "/brief", label: "Brief" },
+              { href: "/training", label: "Training" },
+              { href: "/countdown", label: "Countdown" },
+              { href: "/top5", label: "Top 5" },
+              { href: "/podio", label: "Podio" },
+              { href: "/admin", label: "Admin" },
+            ].map((l, i) => (
+              <span key={l.href} className="flex items-center gap-2">
+                {i > 0 && <span className="text-accenture-purple">{">"}</span>}
+                <a href={l.href} className="transition-colors hover:text-white/60">
+                  {l.label}
+                </a>
+              </span>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2">
+            <span>Hagenthon</span>
+            <span className="text-accenture-purple">{">"}</span>
+            <span>Accenture Application Engineering</span>
+          </div>
         </footer>
       </main>
     </>

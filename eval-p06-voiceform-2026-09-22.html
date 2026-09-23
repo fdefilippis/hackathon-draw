@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — voiceform</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- HERO ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; }
+  .brand .logo { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; }
+  .brand .tool { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.12em; }
+  .repo { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .score-label { font-size: 0.75rem; letter-spacing: 0.3em; color: var(--text-muted); margin-bottom: 0.25rem; }
+  .score-big {
+    font-size: 7rem; font-weight: 900; color: var(--accent);
+    line-height: 1; text-shadow: 0 0 60px rgba(161,0,255,0.4);
+  }
+  .verdict { font-style: italic; color: var(--text-muted); max-width: 600px; margin-top: 1.25rem; line-height: 1.6; }
+  .hero-date { position: absolute; right: 4rem; bottom: 3rem; color: var(--text-muted); font-size: 0.8rem; }
+
+  /* ---------- SECTION TITLES ---------- */
+  .section-title { letter-spacing: 0.2em; font-size: 0.75rem; color: var(--accent); margin-bottom: 1.75rem; font-weight: 600; }
+
+  /* ---------- BREAKDOWN ---------- */
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); margin-top: 0.35rem; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .cell.unweighted { opacity: 0.4; filter: grayscale(1); }
+  .cell.unweighted .bar > span { background: #555; }
+
+  /* ---------- CRITERIA ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem; transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .card-name { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+  .badge {
+    background: var(--accent-glow); color: var(--accent-light);
+    border: 1px solid rgba(161,0,255,0.3); border-radius: 999px;
+    padding: 0.2rem 0.75rem; font-size: 0.85rem; font-weight: 700; white-space: nowrap;
+  }
+  article .bar { margin-top: 0.85rem; }
+  .card-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+  article.unweighted { opacity: 0.45; filter: grayscale(1); }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .badge { background: #1e1e1e; color: #555; border-color: #333; font-size: 0.7rem; letter-spacing: 0.08em; }
+  article.unweighted .bar > span { background: #444; }
+
+  /* ---------- GLOBAL ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface); border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    border-top: 1px solid var(--border); padding: 1.5rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--text-muted); font-size: 0.8rem;
+  }
+
+  @media (max-width: 1100px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .hero-date { right: 1.5rem; }
+    .score-big { font-size: 4.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">&#9654; ACCENTURE</span>
+    <span class="tool">HACKATHON EVALUATOR</span>
+  </div>
+  <div class="repo">https://github.com/bigpea/voiceform</div>
+  <div class="score-label">OVERALL SCORE</div>
+  <div class="score-big">55<span style="font-size:2rem;font-weight:400;color:var(--text-muted);">/100</span></div>
+  <p class="verdict">Workflow di sviluppo ben tagliato, ma prodotto senza agenticità a runtime e failure silenziosi sul path PDF</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">SCORE BREAKDOWN</div>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">42</div>
+      <div class="bar"><span style="width:42%"></span></div>
+      <div class="cell-contrib">24% &middot; 10.1</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">62</div>
+      <div class="bar"><span style="width:62%"></span></div>
+      <div class="cell-contrib">19% &middot; 11.8</div>
+    </div>
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score" style="color:#666">72</div>
+      <div class="bar"><span style="width:72%"></span></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">33</div>
+      <div class="bar"><span style="width:33%"></span></div>
+      <div class="cell-contrib">15% &middot; 5.0</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">64</div>
+      <div class="bar"><span style="width:64%"></span></div>
+      <div class="cell-contrib">12% &middot; 7.7</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">66</div>
+      <div class="bar"><span style="width:66%"></span></div>
+      <div class="cell-contrib">11% &middot; 7.3</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">66</div>
+      <div class="bar"><span style="width:66%"></span></div>
+      <div class="cell-contrib">12% &middot; 7.9</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">78</div>
+      <div class="bar"><span style="width:78%"></span></div>
+      <div class="cell-contrib">7% &middot; 5.5</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">DETAILED ANALYSIS</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head"><span class="card-name">Agentic Depth</span><span class="badge">42</span></div>
+      <div class="bar"><span style="width:42%"></span></div>
+      <p class="card-text"><code>app/.claude/commands/orchestratore.md</code> coordina un fan-out parallelo esplicito verso tre sub-agenti con scope disgiunti (<code>dev.md</code>, <code>readme_agent.md</code>, <code>presentazione_agent.md</code>) e chiude con un gate di verifica su <code>npm run build</code>, ma manca qualsiasi stato esternalizzato, contratto di output fra agenti o memoria tra sessioni. Il layer agentico è puro scaffolding di sviluppo: il prodotto consegnato non contiene agenticità a runtime, e la &laquo;capability agentica&raquo; dichiarata in <code>requirements/requirements.md</code> è in realtà regex deterministica in <code>api/understand/route.ts</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Instruction Quality</span><span class="badge">62</span></div>
+      <div class="bar"><span style="width:62%"></span></div>
+      <p class="card-text"><code>dev.md</code> è il pezzo migliore, con vincoli verificabili e non negoziabili (TypeScript strict, zero API key, WCAG 2.1 AA con soglia esplicita font-size &ge; 18px) e convenzioni di path dichiarate, mentre <code>readme_agent.md</code> specifica un output in 10 sezioni numerate. <code>presentazione_agent.md</code> si contraddice invece internamente: elenca prima 5 slide, poi ne rinumera altre saltando da 3 a 6 a 7 a 11, lasciando ambiguo il deliverable atteso; in nessun file compaiono few-shot example.</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head"><span class="card-name">Idea Quality</span><span class="badge">NON PESATO</span></div>
+      <div class="bar"><span style="width:72%"></span></div>
+      <p class="card-text">Il problema è reale e ben circoscritto — persone con tremore essenziale o emiplegia che non completano moduli PA in autonomia — con persona utente concreta e outcome misurabile (0% &rarr; 100% di completamento autonomo) documentati nel README. Il valore aggiunto dell'AI resta però sottile: la comprensione del parlato è pattern matching scritto a mano, quindi l'idea regge sull'accessibilità più che sull'intelligenza del sistema.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Robustness</span><span class="badge">33</span></div>
+      <div class="bar"><span style="width:33%"></span></div>
+      <p class="card-text"><code>VoiceRecorder.tsx</code> gestisce correttamente il boundary voce, con branch distinti e messaggi utente in italiano per <code>no-speech</code>, <code>not-allowed</code>, browser non supportato ed errore generico. Sul path PDF invece <code>fill-pdf/route.ts</code> inghiotte in silenzio il fallimento di ogni singolo campo (<code>catch {}</code> con commento &laquo;skip silently&raquo;), restituendo un PDF incompleto senza segnalare cosa manca, e non esiste alcun fallback quando l'estrazione non produce campi né gating sui <code>confidence</code> calcolati.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Code Quality</span><span class="badge">64</span></div>
+      <div class="bar"><span style="width:64%"></span></div>
+      <p class="card-text"><code>api/understand/route.ts</code> è curato: normalizzazione <code>è&rarr;e</code>, tre strategie di estrazione del codice fiscale con confidence decrescente, deduplica che tiene il match più affidabile, whitelist <code>availableFields</code> che impedisce di inventare campi e una guardia esplicita per non confondere la data di dichiarazione con quella di nascita. Pesano però l'assenza totale di test su logica interamente regex-based, i <code>catch {}</code> silenziosi e l'hardcoding <code>19${yy}</code> che sbaglia ogni anno a due cifre post-2000.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Tool Appropriateness</span><span class="badge">66</span></div>
+      <div class="bar"><span style="width:66%"></span></div>
+      <p class="card-text">Le allowlist per agente applicano least privilege in modo corretto: <code>readme_agent</code> ha solo Read/Glob/Write e non può eseguire comandi, <code>presentazione_agent</code> solo Read/Write, mentre <code>dev</code> riceve Bash ed Edit perché gli servono davvero. Generazione di README e slide sono però task ripetibili da skill, implementati invece come agenti, e non è impiegato alcun MCP.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Token Efficiency</span><span class="badge">66</span></div>
+      <div class="bar"><span style="width:66%"></span></div>
+      <p class="card-text">I quattro file agentici sono asciutti e non esiste alcun CLAUDE.md, quindi nessun contesto viene caricato sempre; l'orchestratore chiede inoltre la lettura parallela di tre file nominati invece di un'esplorazione aperta. Il vincolo di stack (zero API key, Next.js/Tailwind/pdf-lib) è però ripetuto in <code>dev.md</code>, <code>orchestratore.md</code> e <code>requirements.md</code>, e <code>presentazione_agent.md</code> incorpora nelle istruzioni la prosa integrale delle slide invece di referenziarla.</p>
+    </article>
+
+    <article>
+      <div class="card-head"><span class="card-name">Documentation</span><span class="badge">78</span></div>
+      <div class="bar"><span style="width:78%"></span></div>
+      <p class="card-text">Il README è fra i più completi del lotto: problema, persona, tabella &laquo;adaptive evidence&raquo; che mappa frase pronunciata su campi compilati, learning outcome con metodo di verifica, stack, avvio e struttura cartelle; <code>requirements/requirements.md</code> aggiunge una specifica funzionale e non funzionale ordinata. Manca però una pagina che spieghi a un nuovo arrivato come si usa <code>/orchestratore</code> e quale sia il flusso agentico complessivo.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">GLOBAL ASSESSMENT</div>
+  <div class="global-card">
+    <p>VoiceForm risolve un problema di accessibilità concreto con un prodotto che funziona end-to-end e lo racconta con una documentazione sopra la media. Il layer agentico esiste ed è correttamente disegnato — orchestratore, tre agenti a scope disgiunto, tool allowlist per ruolo, gate di build finale — ma vive interamente in fase di sviluppo e si esaurisce alla prima generazione, senza stato, handoff strutturati o memoria. Il divario più serio è fra ciò che il progetto dichiara e ciò che implementa: <code>requirements.md</code> promette rilevamento di campo, parsing multi-campo e gestione dell'ambiguità come capacità agentiche, mentre il codice le realizza con regex il cui confidence score viene calcolato e poi mai usato per decidere. Sul piano della robustezza il silenzio di <code>fill-pdf/route.ts</code> è il difetto da correggere per primo, perché produce un output plausibile ma incompleto proprio per l'utente meno in grado di accorgersene. Con confidence gating, propagazione degli errori di compilazione e qualche test sulle regex, il progetto salirebbe in modo netto.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

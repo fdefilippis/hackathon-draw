@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — ChiaraParente2/hackaton</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ─────────────────────────────────────────── */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; }
+  .brand .logo { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; }
+  .brand .tool { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.2em; }
+  .repo { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .score-label { font-size: 0.75rem; letter-spacing: 0.3em; color: var(--text-muted); margin-bottom: 0.25rem; }
+  .score-big {
+    font-size: 7rem; font-weight: 900; color: var(--accent);
+    line-height: 1; text-shadow: 0 0 60px rgba(161,0,255,0.4);
+  }
+  .score-big span { font-size: 2.5rem; font-weight: 700; color: var(--text-muted); }
+  .verdict { font-style: italic; color: var(--text-muted); max-width: 600px; margin-top: 1.5rem; line-height: 1.6; }
+  .date-hero { position: absolute; right: 4rem; bottom: 3rem; color: var(--text-muted); font-size: 0.8rem; }
+
+  /* ── Sections ─────────────────────────────────────── */
+  .section-title { letter-spacing: 0.2em; font-size: 0.75rem; color: var(--accent); margin-bottom: 1.75rem; font-weight: 600; }
+
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; }
+  .bar > div { height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .cell.muted { opacity: 0.4; filter: grayscale(1); }
+  .cell.muted .bar > div { background: #555; }
+
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem; transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .card-name { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+  .badge {
+    background: var(--accent-glow); color: var(--accent-light);
+    border: 1px solid rgba(161,0,255,0.3); border-radius: 999px;
+    padding: 0.2rem 0.75rem; font-size: 0.85rem; font-weight: 700; white-space: nowrap;
+  }
+  article p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+  article.muted { opacity: 0.45; filter: grayscale(1); }
+  article.muted:hover { border-color: var(--border); }
+  article.muted .card-name { color: #555; }
+  article.muted .badge { background: #1e1e1e; color: #555; border-color: #333; font-size: 0.7rem; }
+  article.muted .bar > div { background: #444; }
+
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface); border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 1.5rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--text-muted); font-size: 0.8rem;
+  }
+
+  @media (max-width: 1100px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 2rem; padding-right: 2rem; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .date-hero { right: 2rem; }
+    .score-big { font-size: 5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">&#9654; ACCENTURE</span>
+    <span class="tool">HACKATHON EVALUATOR</span>
+  </div>
+  <div class="repo">https://github.com/ChiaraParente2/hackaton</div>
+  <div class="score-label">OVERALL SCORE</div>
+  <div class="score-big">70<span>/100</span></div>
+  <p class="verdict">Disciplina del contesto eccellente, ma il layer agentico si ferma a contratto + due skill</p>
+  <div class="date-hero">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">SCORE BREAKDOWN</div>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">48</div>
+      <div class="bar"><div style="width:48%"></div></div>
+      <div class="cell-contrib">24% &middot; 11.5</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">88</div>
+      <div class="bar"><div style="width:88%"></div></div>
+      <div class="cell-contrib">19% &middot; 16.7</div>
+    </div>
+    <div class="cell muted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">68</div>
+      <div class="bar"><div style="width:68%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">62</div>
+      <div class="bar"><div style="width:62%"></div></div>
+      <div class="cell-contrib">15% &middot; 9.3</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">76</div>
+      <div class="bar"><div style="width:76%"></div></div>
+      <div class="cell-contrib">12% &middot; 9.1</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">70</div>
+      <div class="bar"><div style="width:70%"></div></div>
+      <div class="cell-contrib">11% &middot; 7.7</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">88</div>
+      <div class="bar"><div style="width:88%"></div></div>
+      <div class="cell-contrib">12% &middot; 10.6</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">74</div>
+      <div class="bar"><div style="width:74%"></div></div>
+      <div class="cell-contrib">7% &middot; 5.2</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">DETAILED ANALYSIS</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">48</span>
+      </div>
+      <div class="bar"><div style="width:48%"></div></div>
+      <p>Due skill genuinamente eseguibili (<code>skills/verifica-economia/verifica.mjs</code> con 7 invarianti ed exit code, <code>skills/sprite-pipeline/sprites.py</code> con flood fill e crop), ma nessun sub-agente, nessun MCP, nessun hook e nessun workflow con stato: <code>agents/workflows/sprint-2h.md</code> descrive un processo umano, non un'orchestrazione. La parallelizzazione è tra due persone con due sessioni separate, non tra agenti con handoff, quindi manca del tutto il livello orchestratore/esecutori.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">88</span>
+      </div>
+      <div class="bar"><div style="width:88%"></div></div>
+      <p>I prompt in <code>agents/prompts/</code> sono il pezzo migliore del repo: ognuno elenca il contesto da caricare in ordine, i vincoli non negoziabili e una DEFINITION OF DONE con comandi verificabili, e <code>review-scena.md</code> arriva a dare esempio positivo e negativo dell'output atteso. Ogni regola in <code>agents/README.md</code> è motivata dal bug concreto che l'ha generata, e le sovrapposizioni sono state attivamente rimosse (la forma di <code>gameState</code> duplicata tra <code>AGENTS.md</code> e <code>GAME_INFO.md</code> è documentata come eliminata).</p>
+    </article>
+
+    <article class="muted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">NON PESATO</span>
+      </div>
+      <div class="bar"><div style="width:68%"></div></div>
+      <p>Simulatore educativo del primo stipendio per 13-18 anni: problema reale e centrato sul tema inclusione finanziaria, con conseguenze numeriche immediate invece che nozionismo. Resta però un serious game abbastanza convenzionale e senza alcuna componente AI a runtime — l'agentico vive solo nel processo di sviluppo.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">62</span>
+      </div>
+      <div class="bar"><div style="width:62%"></div></div>
+      <p>L'escalation umana è intenzionale e ben posizionata: <code>review-scena.md</code> impone "non correggere nulla finché non te lo dico", <code>nuova-scena.md</code> chiede un piano di 3 righe prima del codice e <code>modifica-economia.md</code> vieta di dichiarare finito senza aver incollato l'output di <code>verifica.mjs</code>. Manca però qualsiasi fallback se una skill fallisce o produce output malformato, non ci sono limiti di iterazione né rami di errore, e il gate di verifica resta affidato alla disciplina perché non è cablato in un hook.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">76</span>
+      </div>
+      <div class="bar"><div style="width:76%"></div></div>
+      <p><code>app/src/utils/finance.js</code> è una fonte di verità pulita: valori derivati fuori dallo stato, <code>Intl.NumberFormat</code> per gli importi, guardia su divisione per zero in <code>pct()</code> e commenti che spiegano il perché e non il cosa. <code>verifica.mjs</code> è senza dipendenze e copre 309 combinazioni in modo esaustivo; resta qualche incoerenza minore, come l'uso di <code>|| 0</code> in <code>speseMensiliStimate()</code> proprio nel repo che documenta la trappola <code>||</code> contro <code>??</code>.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">70</span>
+      </div>
+      <div class="bar"><div style="width:70%"></div></div>
+      <p>Le skill sono usate esattamente dove serve — task ripetibili e deterministici come la pipeline sprite e la verifica economica — senza ridondanza tra le due e senza agenti sovradimensionati per uno sprint di 2 ore. Il difetto è la mancata chiusura del cerchio: i 4 prompt riusabili sarebbero slash command naturali invece che <code>.md</code> da copiaincollare, e <code>verifica.mjs</code> è dichiarato "utilizzabile in CI o in un hook pre-commit" in <code>skills/verifica-economia/SKILL.md</code> ma poi non è mai stato cablato come hook.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">88</span>
+      </div>
+      <div class="bar"><div style="width:88%"></div></div>
+      <p><code>agents/TOKENOMICS.md</code> riporta numeri misurati e non stimati: rimozione di 1.036 tile ridondanti (da ~15-20k a ~200 token per listing), una singola riga di <code>AGENTS.md</code> che imponeva 7k token a ogni task sostituita con la lettura selettiva per scena (-90% sul costo fisso), più la regola "grep prima di read" e un ordine di lettura annotato con i costi in <code>agents/README.md</code>. Mancano una strategia esplicita di prompt caching e un ulteriore sfoltimento di <code>AGENTS.md</code>, che a 367 righe resta un pedaggio fisso di ~4k token per ogni task.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">74</span>
+      </div>
+      <div class="bar"><div style="width:74%"></div></div>
+      <p>Il livello <code>agents/</code> è documentato molto bene: indice con ordine di lettura, contratto, design document diviso per scena, e ogni SKILL.md con problema, uso, funzionamento e limiti espliciti. Il <code>README.md</code> di root però è solo "hackaton project": chi apre il repo non trova setup, demo né spiegazione del flusso agentico, e deve indovinare di scendere in <code>agents/</code>.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">GLOBAL ASSESSMENT</div>
+  <div class="global-card">
+    <p>Il progetto è un caso quasi didattico di context engineering: <code>TOKENOMICS.md</code> misura gli sprechi invece di stimarli, i prompt dichiarano cosa caricare e quando fermarsi, e ogni regola è tracciata al bug che l'ha resa necessaria. Le due skill sono reali e non decorative — <code>verifica-economia</code> in particolare trasforma una classe intera di bug economici in un controllo deterministico con exit code. Il limite è che tutto questo resta un layer di istruzioni e utility: non esistono sub-agenti, MCP, hook né orchestrazione con stato, quindi la profondità agentica è bassa rispetto alla qualità di ciò che è stato scritto. Il gap più facile da colmare era proprio il più dichiarato: <code>verifica.mjs</code> è descritto come hook-ready ma non è mai stato agganciato, e i quattro prompt sarebbero diventati slash command con pochi minuti di lavoro. Prodotto solido e onesto, con un impianto agentico maturo nel pensiero ma incompleto nell'esecuzione.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Evaluation — visio-voice-challenge-hackathon</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --accent: #A100FF;
+    --accent-glow: rgba(161, 0, 255, 0.18);
+    --accent-light: #C84BFF;
+    --text: #FFFFFF;
+    --text-muted: #9B9B9B;
+    --border: #2A2A2A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, #0A0A0A 0%, #160028 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 4rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+  }
+  .brand .acn { color: var(--accent); font-weight: 700; }
+  .brand .tool { color: var(--text-muted); }
+  .repo {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    word-break: break-all;
+  }
+  .score-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+  .score-big {
+    font-size: 7rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(161, 0, 255, 0.4);
+  }
+  .score-big span { font-size: 2.5rem; font-weight: 700; color: var(--text-muted); }
+  .verdict {
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+  }
+  .hero-date {
+    position: absolute;
+    right: 4rem;
+    bottom: 3rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Breakdown ---------- */
+  .breakdown { padding: 2.5rem 4rem; background: var(--surface); }
+  .section-title {
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+  }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .cell-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .cell-score { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .bar { height: 3px; background: var(--surface-2); border-radius: 2px; margin-top: 0.5rem; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, #A100FF, #C84BFF); border-radius: 2px; }
+  .cell-contrib { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+  .cell.unweighted { opacity: 0.4; filter: grayscale(1); }
+  .cell.unweighted .bar-fill { background: #555; }
+
+  /* ---------- Criteria ---------- */
+  .criteria { padding: 2.5rem 4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 200ms;
+  }
+  article:hover { border-color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .card-name {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+  }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(161, 0, 255, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  article .bar { margin-top: 0.9rem; }
+  .card-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; }
+
+  article.unweighted { opacity: 0.45; filter: grayscale(1); }
+  article.unweighted:hover { border-color: var(--border); }
+  article.unweighted .card-name { color: #555; }
+  article.unweighted .bar-fill { background: #444; }
+  article.unweighted .badge {
+    background: #1e1e1e;
+    color: #555;
+    border-color: #333;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Global ---------- */
+  .global { padding: 2.5rem 4rem; }
+  .global-card {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.5rem;
+  }
+  .global-card p { line-height: 1.8; color: var(--text-muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 1100px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    header, .breakdown, .criteria, .global, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .grid-4 { grid-template-columns: 1fr; }
+    .score-big { font-size: 4.5rem; }
+    .hero-date { position: static; margin-top: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="acn">&#9654; ACCENTURE</span>
+    <span class="tool">HACKATHON EVALUATOR</span>
+  </div>
+  <div class="repo">github.com/giuseppe-maria-ingra-acn/visio-voice-challenge-hackathon</div>
+  <div class="score-label">Overall Score</div>
+  <div class="score-big">85<span>/100</span></div>
+  <p class="verdict">Squadra agentica con perimetri disgiunti e un invariante verificabile a macchina: fra i lavori più maturi del lotto</p>
+  <div class="hero-date">2026-09-22</div>
+</header>
+
+<section class="breakdown">
+  <div class="section-title">Score Breakdown</div>
+  <div class="grid-4">
+    <div class="cell">
+      <div class="cell-label">Agentic Depth</div>
+      <div class="cell-score">87</div>
+      <div class="bar"><div class="bar-fill" style="width:87%"></div></div>
+      <div class="cell-contrib">24% &middot; 20.9</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Instruction Quality</div>
+      <div class="cell-score">88</div>
+      <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+      <div class="cell-contrib">19% &middot; 16.7</div>
+    </div>
+    <div class="cell unweighted">
+      <div class="cell-label">Idea Quality</div>
+      <div class="cell-score">90</div>
+      <div class="bar"><div class="bar-fill" style="width:90%"></div></div>
+      <div class="cell-contrib">0 (non pesato)</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Robustness</div>
+      <div class="cell-score">80</div>
+      <div class="bar"><div class="bar-fill" style="width:80%"></div></div>
+      <div class="cell-contrib">15% &middot; 12.0</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Code Quality</div>
+      <div class="cell-score">85</div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <div class="cell-contrib">12% &middot; 10.2</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Tool Appropriateness</div>
+      <div class="cell-score">88</div>
+      <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+      <div class="cell-contrib">11% &middot; 9.7</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Token Efficiency</div>
+      <div class="cell-score">72</div>
+      <div class="bar"><div class="bar-fill" style="width:72%"></div></div>
+      <div class="cell-contrib">12% &middot; 8.6</div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">Documentation</div>
+      <div class="cell-score">92</div>
+      <div class="bar"><div class="bar-fill" style="width:92%"></div></div>
+      <div class="cell-contrib">7% &middot; 6.4</div>
+    </div>
+  </div>
+</section>
+
+<section class="criteria">
+  <div class="section-title">Detailed Analysis</div>
+  <div class="grid-2">
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Agentic Depth</span>
+        <span class="badge">87</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:87%"></div></div>
+      <p class="card-text">Otto agenti in <code>.claude/agents/</code> con perimetri di file disgiunti per costruzione, cinque skill di fase (<code>vv-kickoff</code> &rarr; <code>vv-build</code> &rarr; <code>vv-gate</code> &rarr; <code>vv-demo</code>) e quattro hook che coprono SessionStart, PostToolUse e SubagentStop, con tiering opus/sonnet motivato in <code>docs/AGENT-TEAM.md</code>. Lo stato è esternalizzato davvero — <code>SessionState</code> immutabile che evolve per copia, <code>AgentTrace</code> che conserva gli intermedi, <code>session-context.sh</code> che ricostruisce l'avanzamento leggendo il filesystem invece della memoria, e <code>docs/.agent-activity.log</code> append-only da cui <code>demo-director</code> genera la mappa del contributo AI.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Instruction Quality</span>
+        <span class="badge">88</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+      <p class="card-text">Ogni agente dichiara ordine di consegna con degradazione esplicita ("se il tempo finisce consegna i primi"), perimetro di possesso, contratto con firme Java esatte e — cosa rara — il <em>perché</em> di ogni vincolo: in <code>fidelity-auditor.md</code> l'assenza di <code>Write</code> è argomentata come ragione d'essere, non come limite. <code>CLAUDE.md</code> è tenuto a 5&nbsp;KB con la regola esplicita di rimandare a <code>docs/</code>; le sovrapposizioni residue sono lievi (la tabella perimetri in <code>docs/AGENT-TEAM.md</code> ripete i singoli agent, <code>vv-gate</code> ripete parte di <code>docs/COME-TESTARE.md</code>).</p>
+    </article>
+
+    <article class="unweighted">
+      <div class="card-head">
+        <span class="card-name">Idea Quality</span>
+        <span class="badge">NON PESATO</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:90%"></div></div>
+      <p class="card-text">Il problema è reale e tipizzato sui criteri WCAG più violati, non un caso inventato: la persona (<code>docs/PERSONA.md</code>) è precisa e il servizio è descritto come dati in <code>resources/scenarios/</code>, così il motore resta generico. Notevole l'onestà intellettuale di marcare la replica come <code>RICOSTRUITO</code> in <code>docs/EVIDENCE.md</code> invece di spacciarla per osservazione diretta.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Robustness</span>
+        <span class="badge">80</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:80%"></div></div>
+      <p class="card-text">Fallback reali e non dichiarativi: <code>MockLlmClient</code> è <code>@Primary</code> così la demo gira offline, e una fixture mancante produce una risposta <em>dichiarata come dedotta</em> invece di inventata; <code>java-build-gate.sh</code> esce con codice 2 e risveglia l'agente sul build rotto, <code>invariant-guard.sh</code> blocca i dati di dominio ma si limita ad avvisare sull'euristica provenance — distinzione ragionata e scritta nel commento. Mancano però un retry esplicito sul client LLM reale e un limite di iterazione dichiarato nella catena degli agenti; il recupero da un builder che consegna test rossi è lasciato al giudizio dell'orchestratore umano.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Code Quality</span>
+        <span class="badge">85</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      <p class="card-text"><code>ProvenanceGate</code> è una <code>final class</code> con costruttore privato, regex precompilate e Javadoc che dichiara i propri limiti in <code>SEMANTIC_LIMIT_NOTE</code>, propagato in ogni <code>FidelityReport</code>; <code>IbanValidator</code> implementa mod-97-10 a blocchi anziché costruire un <code>BigInteger</code> da 30 cifre, con messaggi d'errore pronunciabili. I record usano <code>requireNonNull</code> e <code>List.copyOf</code> per un'immutabilità vera, e gli 11 file di test hanno nomi che descrivono il caso; resta un po' contorto il ramo IBAN estero, che commenta "il servizio INPS richiede IBAN italiano" ma poi valida comunque.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Tool Appropriateness</span>
+        <span class="badge">88</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+      <p class="card-text">I tool sono calibrati per ruolo senza ridondanze: <code>fidelity-auditor</code> senza <code>Write</code>/<code>Edit</code> per costruzione, <code>scenario-researcher</code> con <code>WebSearch</code>/<code>WebFetch</code> che gli servono davvero, <code>demo-director</code> confinato a <code>docs/</code>. Gli hook usano i matcher corretti con timeout proporzionati (10s per il log, 20s per il guard, 180s per il build) e <code>asyncRewake</code> solo dove l'operazione è lenta.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Token Efficiency</span>
+        <span class="badge">72</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:72%"></div></div>
+      <p class="card-text">La strategia selettiva è dichiarata e applicata: <code>CLAUDE.md</code> fermo a 5&nbsp;KB con rimando esplicito a <code>docs/</code> "che gli agenti leggono su richiesta", documentazione spezzata per argomento e skill caricate per fase, nessun <code>alwaysApply</code> oltre al file di progetto. Il punto debole è <code>docs/ARCHITECTURE.md</code> a 37,8&nbsp;KB dichiarato normativo per i builder, più la duplicazione della tabella perimetri fra <code>docs/AGENT-TEAM.md</code> e i singoli agent.</p>
+    </article>
+
+    <article>
+      <div class="card-head">
+        <span class="card-name">Documentation</span>
+        <span class="badge">92</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:92%"></div></div>
+      <p class="card-text">README con le barriere tipizzate e i contesti d'applicazione in forma tabellare, nove documenti in <code>docs/</code> che coprono persona, prove, architettura, piano e strategia di test, e un diagramma dell'ordine di lancio degli agenti. <code>docs/COME-TESTARE.md</code> fa una cosa che quasi nessuno fa: dichiara quale livello di verifica <strong>non</strong> è automatizzabile e avverte di non rimandarlo.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="global">
+  <div class="section-title">Global Assessment</div>
+  <div class="global-card">
+    <p>È il progetto in cui la struttura agentica non è decorativa ma porta il peso del prodotto: i perimetri disgiunti degli otto agenti sono la precondizione che rende possibile il parallelismo, e la separazione fra chi costruisce e chi verifica è imposta togliendo i tool di scrittura all'auditor invece che raccomandandola a parole. L'invariante di provenance è la scelta più forte, perché trasforma due requisiti vaghi — semplificare senza tradire, dichiarare dove ha lavorato l'AI — in qualcosa che <code>ProvenanceInvariantTest</code> verifica meccanicamente, e il gate dichiara i propri limiti semantici invece di nasconderli. La robustezza è buona ma non completa: mancano retry e limiti di iterazione espliciti, e il recupero da un builder fallito resta umano. Il costo maggiore è in efficienza di contesto, con un <code>ARCHITECTURE.md</code> da 37&nbsp;KB dichiarato normativo che stride con la disciplina applicata altrove. Nel complesso un lavoro che regge la lettura ravvicinata e che un team potrebbe riprendere in mano senza spiegazioni a voce.</p>
+  </div>
+</section>
+
+<footer>
+  <span>&#9654; Powered by Accenture Hackathon Evaluator</span>
+  <span>2026-09-22</span>
+</footer>
+
+</body>
+</html>
