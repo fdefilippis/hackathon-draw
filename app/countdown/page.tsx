@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Background from "@/components/Background";
 
-/** Orario di ritrovo dopo la pausa pranzo: oggi alle 14:00 (ora locale). */
-const TARGET_H = 14;
-const TARGET_M = 0;
+/** Orario di ritrovo: oggi alle 15:30 (ora locale). */
+const TARGET_H = 15;
+const TARGET_M = 30;
 
 function targetDate(): Date {
   const t = new Date();
@@ -49,8 +49,8 @@ export default function CountdownPage() {
   // Aggiorna il titolo della tab con il tempo residuo.
   useEffect(() => {
     document.title = time.done
-      ? "È ora! · 14:00"
-      : `${time.h}:${time.m}:${time.s} · 14:00`;
+      ? "È ora! · 15:30"
+      : `${time.h}:${time.m}:${time.s} · 15:30`;
   }, [time]);
 
   const toggleFullscreen = useCallback(() => {
@@ -119,7 +119,7 @@ export default function CountdownPage() {
                 className="mt-10 text-base text-white/55 sm:text-xl"
               >
                 Ritrovo alle{" "}
-                <b className="font-bold text-accenture-purpleLight">14:00</b>
+                <b className="font-bold text-accenture-purpleLight">15:30</b>
               </motion.p>
             </>
           )}
