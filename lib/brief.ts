@@ -21,20 +21,47 @@ export const DEMONSTRATE = [
 
 export const GENERAL_RULES = [
   "I team sono composti da 2 persone.",
-  "Il tempo di sviluppo è di 5 ore, distribuito in due blocchi separati dalla pausa pranzo.",
-  "Il freeze è alle 15:20: dopo il freeze non sarà più possibile modificare il prototipo, ma solo preparare la demo a partire dal materiale già consegnato.",
+  "Il tempo di sviluppo è di 3 ore, distribuito in due blocchi separati dalla pausa pranzo.",
+  "Il freeze è alle 15:30: dopo il freeze non sarà più possibile modificare il prototipo, ma solo preparare la demo a partire dal materiale già consegnato.",
   "Ogni team dovrà presentare una soluzione dimostrabile, anche in forma prototipale, ma non puramente teorica.",
   "La consegna finale dovrà essere effettuata tramite repository pubblico GitHub.",
 ];
 
-export const AGENDA = [
-  { time: "09:00", label: "Intro e kick-off", note: "20 min" },
-  { time: "09:20", label: "Sviluppo + preparazione demo" },
+export type AgendaItem = {
+  time: string;
+  label: string;
+  note?: string;
+  items?: string[];
+  freeze?: boolean;
+};
+
+export const AGENDA: AgendaItem[] = [
+  { time: "09:00", label: "Introduzione", note: "30 min" },
+  {
+    time: "09:30",
+    label: "Formazione AI",
+    note: "2 ore",
+    items: [
+      "Perché siamo qui",
+      "Obiettivo della giornata di formazione",
+      "Sfide cliente",
+      "The Agentic Shift",
+      "Claude Code",
+      "Harness (context engineering, rules, memory, skills, agents)",
+      "Best practices",
+    ],
+  },
+  {
+    time: "11:30",
+    label: "Formazione pratica",
+    note: "3 ore totali",
+    items: ["Realizzazione di use case tramite Claude Code in gruppi di 2 persone"],
+  },
   { time: "13:00", label: "Pausa pranzo", note: "1 ora" },
-  { time: "14:00", label: "Sviluppo + preparazione demo (continua)" },
-  { time: "15:20", label: "Freeze — stop sviluppo", freeze: true },
-  { time: "15:20", label: "Presentazioni e demo finali", note: "30 min" },
-  { time: "15:50", label: "Chiusura", note: "10 min" },
+  { time: "14:00", label: "Formazione pratica (continua)" },
+  { time: "15:30", label: "Freeze — stop sviluppo", freeze: true },
+  { time: "15:30", label: "Valutazione progetti realizzati", note: "30 min" },
+  { time: "16:00", label: "Presentazione dei 5 migliori progetti realizzati", note: "30 min" },
 ];
 
 export const SUBMISSION_RULES = [
@@ -112,7 +139,7 @@ export const THEMES: Theme[] = [
     focus:
       "Il focus non è l’audit tecnico del codice né la conformità formale alle linee guida: è la persona. La soluzione deve mettersi accanto a chi ha la difficoltà e aiutarlo a capire, orientarsi, compilare, decidere e portare a termine ciò che stava provando a fare.",
     challenge:
-      "In team da 2 persone, avete 5 ore di sviluppo per progettare e realizzare uno strumento che affianchi una persona con una difficoltà precisa mentre usa un servizio digitale reale, e le permetta di arrivare fino in fondo al suo obiettivo.",
+      "In team da 2 persone, avete 3 ore di sviluppo per progettare e realizzare uno strumento che affianchi una persona con una difficoltà precisa mentre usa un servizio digitale reale, e le permetta di arrivare fino in fondo al suo obiettivo.",
     examples: [
       "un assistente che riscrive una pagina o un documento complesso nel linguaggio e nel formato di cui quella persona ha bisogno",
       "una guida che accompagna passo passo la compilazione di un modulo online, un campo alla volta, spiegando cosa serve davvero",
@@ -162,7 +189,7 @@ export const THEMES: Theme[] = [
     focus:
       "Il focus non è creare un consulente finanziario AI, ma supportare l'educazione alla finanza personale di base: aiutare le persone a comprendere concetti, gestire le proprie finanze quotidiane e prendere decisioni informate.",
     challenge:
-      "In team da 2 persone, avete 5 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per supportare l'educazione alla finanza personale di base, rendendo concetti e gestione del denaro più comprensibili e accessibili.",
+      "In team da 2 persone, avete 3 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per supportare l'educazione alla finanza personale di base, rendendo concetti e gestione del denaro più comprensibili e accessibili.",
     examples: [
       "uno strumento che spiega in linguaggio semplice concetti finanziari di base (interesse, tasso, inflazione, rata, TAEG)",
       "un coach che aiuta a costruire e capire un budget personale o a tenere traccia delle spese",
@@ -208,7 +235,7 @@ export const THEMES: Theme[] = [
     focus:
       "Riguarda utenti con bassa alfabetizzazione digitale, difficoltà cognitive o linguistiche, DSA, anziani, lavoratori in riqualificazione o persone che devono imparare a usare strumenti digitali essenziali. Il focus non è creare contenuti formativi generici, ma supportare un percorso di apprendimento inclusivo in uno scenario concreto.",
     challenge:
-      "In team da 2 persone, avete 5 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per rendere più accessibile, comprensibile o personalizzato un percorso di apprendimento digitale per utenti con difficoltà.",
+      "In team da 2 persone, avete 3 ore di sviluppo per progettare e realizzare una soluzione che utilizzi strumenti di agentic coding per rendere più accessibile, comprensibile o personalizzato un percorso di apprendimento digitale per utenti con difficoltà.",
     examples: [
       "un generatore di micro-lezioni adattate al livello dell'utente",
       "una guida passo-passo per usare uno strumento digitale reale",

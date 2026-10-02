@@ -35,12 +35,6 @@ export default function BrandHeader({
           >
             Brief
           </Link>
-          <Link
-            href="/training"
-            className="rounded-full px-3 py-1.5 transition hover:bg-white/5 hover:text-white"
-          >
-            Training
-          </Link>
         </nav>
         <div className="hidden text-right leading-tight sm:block">
           <div className="text-[10px] font-semibold uppercase tracking-[0.25em] text-accenture-purpleLight">

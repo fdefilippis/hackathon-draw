@@ -3,7 +3,7 @@ export type Pair = {
   members: [string, string];
 };
 
-export const TARGET_PARTICIPANTS = 40;
+export const TARGET_PARTICIPANTS = 52;
 export const TEAM_SIZE = 2;
 
 /**

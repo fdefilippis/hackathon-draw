@@ -50,7 +50,7 @@ export default function IntroScreen({
         transition={{ delay: 0.45, duration: 0.7 }}
         className="mt-7 max-w-2xl text-balance text-lg text-white/65 sm:text-xl"
       >
-        40 menti. 20 squadre. Cinque ore per costruire qualcosa di
+        52 menti. 26 squadre. Tre ore per costruire qualcosa di
         straordinario. Pronti a scoprire le squadre?
       </motion.p>
 
@@ -84,12 +84,6 @@ export default function IntroScreen({
             className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-base font-medium text-white/80 backdrop-blur transition hover:border-accenture-purple/60 hover:text-white"
           >
             Brief & regolamento
-          </Link>
-          <Link
-            href="/training"
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-base font-medium text-white/80 backdrop-blur transition hover:border-accenture-purple/60 hover:text-white"
-          >
-            Training Claude Code
           </Link>
           <Link
             href="/countdown"

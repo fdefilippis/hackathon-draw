@@ -131,7 +131,6 @@ export default function Home() {
           <nav className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
             {[
               { href: "/brief", label: "Brief" },
-              { href: "/training", label: "Training" },
               { href: "/countdown", label: "Countdown" },
               { href: "/top5", label: "Top 5" },
               { href: "/podio", label: "Podio" },
