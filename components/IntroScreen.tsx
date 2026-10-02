@@ -44,6 +44,25 @@ export default function IntroScreen({
         </span>
       </motion.h1>
 
+      {/* Edizione cliente: logo Unipol (versione negativa per fondo scuro) */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.38, duration: 0.7 }}
+        className="mt-8 flex items-center gap-4 sm:gap-5"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/unipol-logo.svg"
+          alt="Unipol"
+          className="h-9 w-auto sm:h-11"
+        />
+        <span className="h-9 w-px bg-white/25 sm:h-11" />
+        <span className="font-display text-sm font-semibold uppercase tracking-[0.35em] text-white/80 sm:text-base">
+          Unipol Edition
+        </span>
+      </motion.div>
+
       <motion.p
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
