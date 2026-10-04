@@ -235,17 +235,17 @@ export default function BriefView() {
           GitHub, completo di progetto, struttura agentica e presentazione finale.
         </p>
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+          <div className="min-w-0 rounded-xl border border-white/10 bg-white/[0.03] p-5">
             <h3 className="mb-3 font-display text-lg font-semibold text-white">
               Regole di consegna
             </h3>
             <Bullets items={SUBMISSION_RULES} />
           </div>
-          <div className="rounded-xl border border-accenture-purple/20 bg-accenture-purple/5 p-5">
+          <div className="min-w-0 rounded-xl border border-accenture-purple/20 bg-accenture-purple/5 p-5">
             <h3 className="mb-3 font-display text-lg font-semibold text-white">
               Struttura minima del repository
             </h3>
-            <ul className="space-y-1 font-mono text-sm text-white/70">
+            <ul className="space-y-1 overflow-x-auto font-mono text-xs text-white/70 sm:text-sm">
               {REPO_STRUCTURE.map((item, i) => (
                 <li key={i} className="whitespace-pre">
                   {item}

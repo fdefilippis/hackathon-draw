@@ -34,13 +34,16 @@ export default function IntroScreen({
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25, duration: 0.8 }}
-        className="font-display text-6xl font-bold leading-[0.95] tracking-tight sm:text-7xl md:text-8xl lg:text-9xl"
+        className="font-display text-5xl font-bold leading-[0.95] tracking-tight sm:text-7xl md:text-8xl lg:text-9xl"
       >
         <span className="text-gradient-anim animate-shimmer">Benvenuti</span>
         <br />
-        <span className="text-white">
+        {/* Il marchio ">" è fuori dal flusso: la riga resta centrata sul testo */}
+        <span className="relative text-white">
           all{"’"}Hagenthon
-          <span className="acn-mark align-top text-accenture-purple">{">"}</span>
+          <span className="acn-mark absolute left-full top-0 text-accenture-purple">
+            {">"}
+          </span>
         </span>
       </motion.h1>
 

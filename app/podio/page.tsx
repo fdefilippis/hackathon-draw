@@ -75,7 +75,7 @@ export default function PodioPage() {
           )}
         </div>
 
-        <footer className="mt-6 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-white/25">
+        <footer className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 whitespace-nowrap text-[11px] uppercase tracking-[0.2em] text-white/25">
           <span>Hagenthon</span>
           <span className="text-accenture-purple">{">"}</span>
           <span>Accenture Application Engineering</span>

@@ -125,7 +125,7 @@ export default function CountdownPage() {
           )}
         </div>
 
-        <footer className="mt-6 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-white/25">
+        <footer className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 whitespace-nowrap text-[11px] uppercase tracking-[0.2em] text-white/25">
           <span>Hagenthon</span>
           <span className="text-accenture-purple">{">"}</span>
           <span>Accenture Application Engineering</span>
@@ -138,7 +138,7 @@ export default function CountdownPage() {
 function TimeUnit({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-2 sm:gap-4">
-      <span className="font-display text-[22vw] font-black leading-none tabular-nums text-white drop-shadow-[0_0_60px_rgba(161,0,255,0.25)] sm:text-[16vw] md:text-[14rem]">
+      <span className="font-display text-[19vw] font-black leading-none tabular-nums text-white drop-shadow-[0_0_60px_rgba(161,0,255,0.25)] sm:text-[16vw] md:text-[14rem]">
         {value}
       </span>
       <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/40 sm:text-sm">
@@ -150,7 +150,7 @@ function TimeUnit({ value, label }: { value: string; label: string }) {
 
 function Separator() {
   return (
-    <span className="animate-pulse self-center pt-[6vw] font-display text-[14vw] font-black leading-none text-white/25 sm:pt-0 sm:text-[10vw] md:text-9xl">
+    <span className="animate-pulse self-center pt-[5vw] font-display text-[12vw] font-black leading-none text-white/25 sm:pt-0 sm:text-[10vw] md:text-9xl">
       :
     </span>
   );
