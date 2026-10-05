@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export type Finalist = {
   pairIndex: number;
-  members: [string, string];
+  members: string[];
 };
 
 export default function Top5Reveal({ finalists }: { finalists: Finalist[] }) {
@@ -51,9 +51,14 @@ export default function Top5Reveal({ finalists }: { finalists: Finalist[] }) {
                     className="flex h-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-5 text-center backdrop-blur-sm"
                   >
                     <span className="font-display text-xl font-bold text-white sm:text-2xl">
-                      {p.members[0]}
-                      <span className="mx-3 text-accenture-purple">{"×"}</span>
-                      {p.members[1]}
+                      {p.members.map((m, j) => (
+                        <span key={m}>
+                          {j > 0 && (
+                            <span className="mx-3 text-accenture-purple">{"×"}</span>
+                          )}
+                          {m}
+                        </span>
+                      ))}
                     </span>
                   </motion.div>
                 ) : (

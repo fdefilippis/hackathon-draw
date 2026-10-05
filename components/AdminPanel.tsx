@@ -3,10 +3,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { SedeTag } from "@/components/TeamTags";
+import { teamSede } from "@/lib/participants";
 
 type AdminPair = {
   pairIndex: number;
-  members: [string, string];
+  members: string[];
   githubUrl: string | null;
   voteAgentic: number | null;
   voteJury: number | null;
@@ -254,6 +256,7 @@ export default function AdminPanel() {
             const total = totalOf(p);
             const rank = ordered.findIndex((x) => x.pairIndex === p.pairIndex);
             const isTop = topFive.has(p.pairIndex);
+            const sede = teamSede(p.members);
 
             return (
               <motion.div
@@ -286,6 +289,7 @@ export default function AdminPanel() {
                         <span className="font-display text-[10px] font-bold uppercase tracking-[0.25em] text-white/30">
                           Squadra {String(p.pairIndex + 1).padStart(2, "0")}
                         </span>
+                        {sede && <SedeTag sede={sede} />}
                         {isTop && (
                           <span className="rounded-full bg-accenture-magenta/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-accenture-magenta">
                             Top 5
@@ -293,9 +297,14 @@ export default function AdminPanel() {
                         )}
                       </div>
                       <p className="mt-1 truncate font-display text-lg font-semibold leading-snug text-white">
-                        {p.members[0]}{" "}
-                        <span className="text-accenture-purple">+</span>{" "}
-                        {p.members[1]}
+                        {p.members.map((m, j) => (
+                          <span key={m}>
+                            {j > 0 && (
+                              <span className="text-accenture-purple"> + </span>
+                            )}
+                            {m}
+                          </span>
+                        ))}
                       </p>
                     </div>
                     {m === "view" && (

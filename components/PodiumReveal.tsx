@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export type PodiumEntry = {
   rank: 1 | 2 | 3;
-  members: [string, string];
+  members: string[];
   prizeLabel: string;
   prizeAmount: string;
   prizeNote: string;
@@ -104,9 +104,14 @@ export default function PodiumReveal({ entries }: { entries: PodiumEntry[] }) {
                     >
                       <div className="text-4xl sm:text-5xl">{s.medal}</div>
                       <div className="mt-2 font-display text-lg font-bold leading-tight text-white sm:text-2xl">
-                        {entry.members[0]}
-                        <span className="mx-2 text-accenture-purple">{"×"}</span>
-                        {entry.members[1]}
+                        {entry.members.map((m, j) => (
+                          <span key={m}>
+                            {j > 0 && (
+                              <span className="mx-2 text-accenture-purple">{"×"}</span>
+                            )}
+                            {m}
+                          </span>
+                        ))}
                       </div>
                     </motion.div>
                   )}

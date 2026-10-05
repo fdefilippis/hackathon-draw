@@ -3,69 +3,10 @@
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { parseParticipants, validate } from "@/lib/pairing";
+import { PARTICIPANTS } from "@/lib/participants";
 
-/**
- * Partecipanti alla formazione Claude Unipol: righe con tipologia
- * "Partecipante" (Executive e Project Lead) e "SI" su Partecipazione
- * nell'elenco partecipanti, con i nomi riportati in formato Nome Cognome.
- * Precaricati nella textarea: modificabili prima dell'estrazione.
- */
-const PARTICIPANTS = [
-  "Pierluigi Aconito",
-  "Caterina Beltrame",
-  "Gianmarco Borgese",
-  "Francesca Calafato",
-  "Rita Canu",
-  "Gino Conte",
-  "Stefano Dal Pos",
-  "Luigi Del Fuoco",
-  "Marco De Renzi",
-  "Alessandra De Simone",
-  "Andrea Di Caro",
-  "Raimondo Di Iorio",
-  "Antonio Esposito",
-  "Mariangela Fierro",
-  "Andrea Loris Gialain",
-  "Andrea Locane",
-  "Mauro Lunghi",
-  "Alessandro Magliola",
-  "Salvatore Mangano",
-  "Dario Marelli",
-  "Marco Marino",
-  "Giacomo Mazzara",
-  "Palmita Mele",
-  "Francesco Meneghello",
-  "Mirko Milano",
-  "Antonella Pagano",
-  "Marco Palestra",
-  "Daniele Perri",
-  "Vincenzo Perrone",
-  "Armando Pierri",
-  "Giuliano Puleo",
-  "Sara Rancati",
-  "Cinzia Rivara",
-  "Martina Sbaffi",
-  "Fabrizio Sebastiani",
-  "Iana Stamati",
-  "Laura Vielmi",
-  "Asia Angelini",
-  "Matteo Artuso",
-  "Giacomo Bandini",
-  "Niccolò Boschetti",
-  "Enrico Catanea",
-  "Roberto Di Lorenzo",
-  "Giuseppe Maria Ingrà",
-  "Selene Liveri",
-  "Anna Maggioni",
-  "Giuseppe Mallano",
-  "Angela Mastrandrea",
-  "Beatrice Moraglia",
-  "Simone Rocchi",
-  "Ida Scardigno",
-  "Martina Valera",
-];
-
-const PARTICIPANTS_TEXT = PARTICIPANTS.join("\n");
+// Precaricati nella textarea: modificabili prima dell'estrazione.
+const PARTICIPANTS_TEXT = PARTICIPANTS.map((p) => p.name).join("\n");
 
 const toneStyles: Record<string, string> = {
   neutral: "text-white/50 border-white/10 bg-white/5",
@@ -101,6 +42,8 @@ export default function InputScreen({
         </h2>
         <p className="mt-3 text-white/55">
           Incolla la lista dei partecipanti, un nome per riga.
+          <br />
+          Squadre per sede, ognuna con almeno una licenza Claude Code.
         </p>
       </div>
 

@@ -25,6 +25,7 @@ function init(): Database.Database {
       pair_index   INTEGER NOT NULL,
       member_a     TEXT    NOT NULL,
       member_b     TEXT    NOT NULL,
+      member_c     TEXT,
       github_url   TEXT,
       vote_agentic REAL,
       vote_jury    REAL,
@@ -36,13 +37,14 @@ function init(): Database.Database {
     );
   `);
 
-  // Migrazione per DB creati prima dell'aggiunta dei campi admin.
+  // Migrazione per DB creati prima dell'aggiunta dei campi admin e dei terzetti.
   const cols = new Set(
     (db.prepare("PRAGMA table_info(pairs)").all() as { name: string }[]).map(
       (c) => c.name
     )
   );
   for (const col of [
+    "member_c TEXT",
     "github_url TEXT",
     "vote_agentic REAL",
     "vote_jury REAL",
@@ -60,6 +62,18 @@ function getDb(): Database.Database {
     globalForDb.__hagenthonDb = init();
   }
   return globalForDb.__hagenthonDb;
+}
+
+type MemberRow = {
+  pair_index: number;
+  member_a: string;
+  member_b: string;
+  member_c: string | null;
+};
+
+/** Membri di una squadra: da 1 (solo remoto) a 3 (terzetto). */
+function membersOf(r: MemberRow): string[] {
+  return [r.member_a, r.member_b, r.member_c].filter((m): m is string => !!m);
 }
 
 export type DrawState = {
@@ -84,9 +98,12 @@ export function saveState(names: string[], pairs: Pair[]): void {
     names.forEach((name, i) => insName.run(i, name));
 
     const insPair = db.prepare(
-      "INSERT INTO pairs (pair_index, member_a, member_b) VALUES (?, ?, ?)"
+      "INSERT INTO pairs (pair_index, member_a, member_b, member_c) VALUES (?, ?, ?, ?)"
     );
-    pairs.forEach((p, i) => insPair.run(i, p.members[0], p.members[1]));
+    pairs.forEach((p, i) =>
+      // member_b è NOT NULL: chi gareggia da solo lo lascia vuoto.
+      insPair.run(i, p.members[0], p.members[1] ?? "", p.members[2] ?? null)
+    );
 
     db.prepare(
       "INSERT INTO meta (key, value) VALUES ('updated_at', ?) " +
@@ -106,8 +123,10 @@ export function loadState(): DrawState | null {
   if (names.length === 0) return null;
 
   const rows = db
-    .prepare("SELECT pair_index, member_a, member_b FROM pairs ORDER BY pair_index")
-    .all() as { pair_index: number; member_a: string; member_b: string }[];
+    .prepare(
+      "SELECT pair_index, member_a, member_b, member_c FROM pairs ORDER BY pair_index"
+    )
+    .all() as MemberRow[];
 
   const meta = db
     .prepare("SELECT value FROM meta WHERE key = 'updated_at'")
@@ -117,7 +136,7 @@ export function loadState(): DrawState | null {
     names: names.map((r) => r.name),
     pairs: rows.map((r) => ({
       id: r.pair_index,
-      members: [r.member_a, r.member_b] as [string, string],
+      members: membersOf(r),
     })),
     updatedAt: meta?.value ?? "",
   };
@@ -134,7 +153,7 @@ export type PairMeta = {
 /** Coppia arricchita con membri + dati admin, identificata dall'indice nell'estrazione corrente. */
 export type AdminPair = {
   pairIndex: number;
-  members: [string, string];
+  members: string[];
 } & PairMeta;
 
 /** Carica le coppie correnti con i relativi dati admin. */
@@ -142,22 +161,19 @@ export function loadAdminPairs(): AdminPair[] {
   const db = getDb();
   const rows = db
     .prepare(
-      `SELECT pair_index, member_a, member_b, github_url, vote_agentic, vote_jury, vote_speech
+      `SELECT pair_index, member_a, member_b, member_c, github_url, vote_agentic, vote_jury, vote_speech
        FROM pairs ORDER BY pair_index`
     )
-    .all() as {
-    pair_index: number;
-    member_a: string;
-    member_b: string;
+    .all() as (MemberRow & {
     github_url: string | null;
     vote_agentic: number | null;
     vote_jury: number | null;
     vote_speech: number | null;
-  }[];
+  })[];
 
   return rows.map((r) => ({
     pairIndex: r.pair_index,
-    members: [r.member_a, r.member_b] as [string, string],
+    members: membersOf(r),
     githubUrl: r.github_url,
     voteAgentic: r.vote_agentic,
     voteJury: r.vote_jury,

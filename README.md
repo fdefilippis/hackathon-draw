@@ -19,7 +19,8 @@ pensato per essere **proiettato su schermo** davanti ai partecipanti.
 40 partecipanti, 20 squadre da 2 persone, un'unica estrazione spettacolare. L'app trasforma il sorteggio in una cerimonia da evento tech: nomi che si mischiano, tensione che cresce, coppie rivelate una alla volta con confetti e musica per gli occhi.
 
 - **Estrazione equa e casuale** — algoritmo Fisher–Yates, ogni persona compare una sola volta.
-- **Reveal progressivo** — le coppie sono calcolate subito ma svelate una per una; l'animazione è puramente scenica.
+- **Squadre vincolate** — mai miste tra sedi (Milano, Roma, Remoto), ognuna con almeno una licenza Claude Code; terzetti solo se non c'è altro modo, nel numero minimo indispensabile; un unico partecipante da remoto gareggia da solo.
+- **Reveal progressivo** — le coppie sono calcolate subito ma svelate una per una, con la sede della squadra e chi ha la licenza Claude Code; l'animazione è puramente scenica.
 - **Privacy by design** — tutto gira *client-side*: i nomi dei partecipanti non lasciano mai il browser.
 - **Pronta per la proiezione** — palette ad alto contrasto, tipografia forte, layout centrato e vignette per lo schermo grande.
 
@@ -29,7 +30,7 @@ pensato per essere **proiettato su schermo** davanti ai partecipanti.
 |---|-----------|--------------|
 | 1 | **Intro** | Branding *Hagenthon* + Accenture Application Engineering, titolo con gradiente animato. |
 | 2 | **Input** | Si incolla la lista dei partecipanti, un nome per riga. Pulsante *Carica esempio (40)* per le prove. |
-| 3 | **Validazione** | Conteggio live, numero pari obbligatorio, controllo duplicati, avviso se diverso dai 40 previsti. |
+| 3 | **Validazione** | Conteggio live, controllo duplicati e anagrafica, fattibilità delle squadre per sede, avviso se diverso dai partecipanti previsti. |
 | 4 | **Estrazione** | *"Estrazione in corso…"* → nomi che si mischiano → *"La prossima coppia è…"* → reveal di una coppia alla volta con confetti e pausa tra una squadra e l'altra. Pulsante **Salta »** sempre disponibile. |
 | 5 | **Risultati** | Tutte le squadre in griglia, leggibili e presentabili: *"Team completati. Che la sfida abbia inizio."* |
 | 6 | **Rigenera / Ricomincia** | Nuova estrazione con gli stessi nomi, oppure ripartenza da zero. |
@@ -81,9 +82,8 @@ npm start
 | Cosa | Dove |
 |------|------|
 | Ritmo della cerimonia (`SHUFFLE_MS`, `REVEAL_MS`, `INTRO_MS`) | `components/DrawingScreen.tsx` |
-| Numero di partecipanti previsto e dimensione squadra | `lib/pairing.ts` (`TARGET_PARTICIPANTS`, `TEAM_SIZE`) |
+| Anagrafica partecipanti (sede, licenza Claude Code) | `lib/participants.ts` (`PARTICIPANTS`) |
 | Palette colori e tipografia | `tailwind.config.ts`, `app/globals.css` |
-| Lista di esempio (40 nomi) | `components/InputScreen.tsx` |
 
 ## 📁 Struttura del progetto
 

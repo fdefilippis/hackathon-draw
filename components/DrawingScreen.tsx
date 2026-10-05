@@ -1,9 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import type { Pair } from "@/lib/pairing";
+import { findParticipant, hasClaudeCode, teamSede } from "@/lib/participants";
+import { ClaudeCodeTag, SedeTag } from "@/components/TeamTags";
 
 type Mode = "intro" | "shuffling" | "revealed";
 
@@ -49,8 +51,7 @@ export default function DrawingScreen({
 }) {
   const [index, setIndex] = useState(0);
   const [mode, setMode] = useState<Mode>("intro");
-  const [flashA, setFlashA] = useState("");
-  const [flashB, setFlashB] = useState("");
+  const [flash, setFlash] = useState<string[]>([]);
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const flashInterval = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -64,10 +65,15 @@ export default function DrawingScreen({
     }
   }, []);
 
-  const rnd = useMemo(
-    () => () => allNames[Math.floor(Math.random() * allNames.length)] ?? "",
-    [allNames]
-  );
+  // Nomi da far scorrere: solo quelli della sede della squadra in arrivo.
+  const namesBySede = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const name of allNames) {
+      const sede = findParticipant(name)?.sede ?? "";
+      map.set(sede, [...(map.get(sede) ?? []), name]);
+    }
+    return map;
+  }, [allNames]);
 
   // Sequenza della cerimonia
   useEffect(() => {
@@ -84,9 +90,11 @@ export default function DrawingScreen({
     }
 
     if (mode === "shuffling") {
+      const members = pairs[index]?.members ?? [];
+      const pool = namesBySede.get(teamSede(members) ?? "") ?? allNames;
+      const rnd = () => pool[Math.floor(Math.random() * pool.length)] ?? "";
       flashInterval.current = setInterval(() => {
-        setFlashA(rnd());
-        setFlashB(rnd());
+        setFlash(Array.from({ length: members.length || 2 }, rnd));
       }, 75);
       timers.current.push(
         setTimeout(() => setMode("revealed"), SHUFFLE_MS)
@@ -114,6 +122,7 @@ export default function DrawingScreen({
   }, [mode, index, pairs.length]);
 
   const current = pairs[Math.min(index, pairs.length - 1)];
+  const sede = current ? teamSede(current.members) : undefined;
   const total = pairs.length;
   const teamNumber = Math.min(index + 1, total);
   const progress = mode === "intro" ? 0 : (index + (mode === "revealed" ? 1 : 0)) / total;
@@ -122,7 +131,11 @@ export default function DrawingScreen({
     mode === "intro"
       ? "Estrazione in corso…"
       : mode === "shuffling"
-        ? "La prossima coppia è…"
+        ? current?.members.length === 3
+          ? "Il prossimo terzetto è…"
+          : current?.members.length === 1
+            ? "In gara da solo…"
+            : "La prossima coppia è…"
         : `Squadra ${String(teamNumber).padStart(2, "0")}`;
 
   return (
@@ -184,6 +197,11 @@ export default function DrawingScreen({
         </motion.div>
       </AnimatePresence>
 
+      {/* Sede della squadra in estrazione */}
+      <div className="mb-6 flex h-8 items-center justify-center">
+        {mode !== "intro" && sede && <SedeTag sede={sede} size="lg" />}
+      </div>
+
       {/* Palco della coppia */}
       <div className="relative flex w-full max-w-5xl items-center justify-center">
         {/* anelli pulsanti durante lo shuffle */}
@@ -198,31 +216,31 @@ export default function DrawingScreen({
         )}
 
         <div className="flex w-full flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-center">
-          <NameCard
-            label="A"
-            mode={mode}
-            value={mode === "revealed" ? current?.members[0] ?? "" : flashA}
-          />
-
-          <div className="flex shrink-0 items-center justify-center py-2">
-            <motion.div
-              animate={
-                mode === "revealed"
-                  ? { scale: [0.6, 1.25, 1], rotate: [0, 8, 0] }
-                  : { scale: 1 }
-              }
-              transition={{ duration: 0.6 }}
-              className="font-display text-3xl font-bold text-accenture-purpleLight sm:text-4xl"
-            >
-              <span className="opacity-60">+</span>
-            </motion.div>
-          </div>
-
-          <NameCard
-            label="B"
-            mode={mode}
-            value={mode === "revealed" ? current?.members[1] ?? "" : flashB}
-          />
+          {(current?.members ?? ["", ""]).map((member, i) => (
+            <Fragment key={i}>
+              {i > 0 && (
+                <div className="flex shrink-0 items-center justify-center py-2">
+                  <motion.div
+                    animate={
+                      mode === "revealed"
+                        ? { scale: [0.6, 1.25, 1], rotate: [0, 8, 0] }
+                        : { scale: 1 }
+                    }
+                    transition={{ duration: 0.6 }}
+                    className="font-display text-3xl font-bold text-accenture-purpleLight sm:text-4xl"
+                  >
+                    <span className="opacity-60">+</span>
+                  </motion.div>
+                </div>
+              )}
+              <NameCard
+                label={String.fromCharCode(65 + i)}
+                mode={mode}
+                value={mode === "revealed" ? member : flash[i] ?? ""}
+                claudeCode={mode === "revealed" && hasClaudeCode(member)}
+              />
+            </Fragment>
+          ))}
         </div>
       </div>
 
@@ -244,10 +262,12 @@ function NameCard({
   value,
   mode,
   label,
+  claudeCode,
 }: {
   value: string;
   mode: Mode;
   label: string;
+  claudeCode: boolean;
 }) {
   const revealed = mode === "revealed";
   return (
@@ -267,6 +287,16 @@ function NameCard({
       <span className="absolute left-4 top-3 font-display text-xs font-bold uppercase tracking-[0.3em] text-white/25">
         {label}
       </span>
+      {claudeCode && (
+        <motion.span
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.35, duration: 0.3 }}
+          className="absolute right-4 top-3"
+        >
+          <ClaudeCodeTag size="lg" />
+        </motion.span>
+      )}
       <AnimatePresence mode="popLayout">
         <motion.span
           key={value}

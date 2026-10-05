@@ -72,7 +72,7 @@ export default function IntroScreen({
         transition={{ delay: 0.45, duration: 0.7 }}
         className="mt-7 max-w-2xl text-balance text-lg text-white/65 sm:text-xl"
       >
-        52 menti. 26 squadre. Tre ore per costruire qualcosa di
+        46 menti. 23 squadre. Tre ore per costruire qualcosa di
         straordinario. Pronti a scoprire le squadre?
       </motion.p>
 

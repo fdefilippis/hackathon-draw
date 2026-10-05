@@ -6,6 +6,8 @@ import Link from "next/link";
 import confetti from "canvas-confetti";
 import type { Pair } from "@/lib/pairing";
 import ConfirmModal from "@/components/ConfirmModal";
+import { ClaudeCodeTag, SedeTag } from "@/components/TeamTags";
+import { hasClaudeCode, teamSede } from "@/lib/participants";
 
 export default function ResultsScreen({
   pairs,
@@ -67,7 +69,8 @@ export default function ResultsScreen({
         className="mb-8 text-center"
       >
         <span className="text-xs font-semibold uppercase tracking-[0.35em] text-accenture-purpleLight">
-          {pairs.length} squadre · {pairs.length * 2} sfidanti
+          {pairs.length} squadre ·{" "}
+          {pairs.reduce((sum, p) => sum + p.members.length, 0)} sfidanti
         </span>
         <h2 className="mt-3 font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
           Team completati.
@@ -77,38 +80,50 @@ export default function ResultsScreen({
       </motion.div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {pairs.map((p, i) => (
-          <motion.div
-            key={p.id}
-            initial={{ opacity: 0, y: 20, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.15 + i * 0.04, duration: 0.4 }}
-            className="border-gradient group rounded-xl p-[1px] transition-transform duration-300 hover:-translate-y-1"
-          >
-            <div className="flex h-full flex-col rounded-[11px] bg-accenture-ink/80 p-4 backdrop-blur">
-              <div className="mb-3 flex items-center justify-between">
-                <span className="font-display text-xs font-bold uppercase tracking-[0.25em] text-white/30">
-                  Squadra
-                </span>
-                <span className="font-display text-lg font-bold text-accenture-purpleLight tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <div className="space-y-1.5">
-                <p className="font-display text-lg font-semibold leading-snug text-white">
-                  {p.members[0]}
-                </p>
-                <div className="flex items-center gap-2 text-accenture-purple">
-                  <span className="h-px flex-1 bg-gradient-to-r from-accenture-purple/50 to-transparent" />
-                  <span className="text-xs font-bold">+</span>
+        {pairs.map((p, i) => {
+          const sede = teamSede(p.members);
+          return (
+            <motion.div
+              key={p.id}
+              initial={{ opacity: 0, y: 20, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.15 + i * 0.04, duration: 0.4 }}
+              className="border-gradient group rounded-xl p-[1px] transition-transform duration-300 hover:-translate-y-1"
+            >
+              <div className="flex h-full flex-col rounded-[11px] bg-accenture-ink/80 p-4 backdrop-blur">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="font-display text-xs font-bold uppercase tracking-[0.25em] text-white/30">
+                      Squadra
+                    </span>
+                    {sede && <SedeTag sede={sede} />}
+                  </div>
+                  <span className="font-display text-lg font-bold text-accenture-purpleLight tabular-nums">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
-                <p className="font-display text-lg font-semibold leading-snug text-white">
-                  {p.members[1]}
-                </p>
+                <div className="space-y-1.5">
+                  {p.members.map((m, j) => (
+                    <div key={m} className="space-y-1.5">
+                      {j > 0 && (
+                        <div className="flex items-center gap-2 text-accenture-purple">
+                          <span className="h-px flex-1 bg-gradient-to-r from-accenture-purple/50 to-transparent" />
+                          <span className="text-xs font-bold">+</span>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="font-display text-lg font-semibold leading-snug text-white">
+                          {m}
+                        </p>
+                        {hasClaudeCode(m) && <ClaudeCodeTag />}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          );
+        })}
       </div>
 
       <motion.div
